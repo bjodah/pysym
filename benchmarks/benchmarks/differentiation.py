@@ -12,14 +12,11 @@ class Diff:
         self.expr = functools.reduce(operator.add, [x**i/(y**i - i/z) for i in range(3)])
         self.y0 = [.1, .2, 0, 0]
 
-    def time_integrate_scipy(self):
-        self.odesys.integrate('scipy', self.tout, self.y0)
+    def time_diff_x(self):
+        self.expr.diff(self.symbols[0])
 
-    def time_integrate_gsl(self):
-        self.odesys.integrate('gsl', self.tout, self.y0)
+    def time_diff_y(self):
+        self.expr.diff(self.symbols[1])
 
-    def time_integrate_odeint(self):
-        self.odesys.integrate('odeint', self.tout, self.y0)
-
-    def time_integrate_cvode(self):
-        self.odesys.integrate('cvode', self.tout, self.y0)
+    def time_diff_z(self):
+        self.expr.diff(self.symbols[2])
