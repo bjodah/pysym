@@ -84,7 +84,8 @@ def _collect(args, collect_to, drop=()):
     if count == 1:
         new_args.append(previous)
     elif count > 1:
-        new_args.append(collect_to(previous, Number(count)))
+        new_args.append(collect_to.create(
+            (previous, Number(count))))
     return tuple(new_args)
 
 
@@ -204,9 +205,7 @@ class Basic(object):
 
     @_wrap_numbers
     def __sub__(self, other):
-        neg = -One*other
-        instance = self + neg
-        return instance
+        return Sub.create((self, other))
 
     def __rsub__(self, other):
         return self - other
@@ -314,7 +313,7 @@ class Atomic(Basic):
         return False
 
     def _subs(self, symb, repl):
-        return self
+        return repl if self is symb else self
 
 
 class Number(Atomic):
@@ -379,7 +378,7 @@ class Operator(Basic):
     _commutative = True
 
     def evalf(self):
-        return self._operator(arg.evalf() for arg in self.args)
+        return self._operator(*tuple(arg.evalf() for arg in self.args))
 
     def __str__(self):
         return self._op_str % self.args
@@ -393,18 +392,6 @@ class Operator(Basic):
             return self.__class__(*sorted(self.args, key=BasicComparator))
         else:
             return self
-
-
-class Unary(Operator):
-
-    def __init__(self, a):
-        super(Unary, self).__init__(a)
-
-
-class Binary(Operator):
-
-    def __init__(self, a, b):
-        super(Binary, self).__init__(a, b)
 
 
 class Reduction(Operator):
@@ -472,6 +459,32 @@ class Mul(Reduction):
             for idx in range(len(self.args))))
 
 
+class Binary(Operator):
+
+    def __init__(self, a, b):
+        super(Binary, self).__init__(a, b)
+
+
+class Sub(Binary):
+    _operator = operator.sub
+    _commutative = False
+    _op_str = '(%s - %s)'
+
+    @classmethod
+    def create(cls, args):
+        a, b = args  # a - b
+        if a.is_zero():
+            return -b
+        if b.is_zero():
+            return a
+        if (a == b).evalb():
+            return Zero
+        return cls(*args)
+
+    def diff(self, wrt):
+        return self.args[0].diff(wrt) - self.args[1].diff(wrt)
+
+
 class Fraction(Binary):
     _operator = operator.truediv
     _commutative = False
@@ -492,7 +505,9 @@ class Fraction(Binary):
         return self.args[0].evalf() / self.args[1].evalf()
 
     def diff(self, wrt):
-        return (self.args[0] * self.args[1]**-One).diff(wrt)
+        a, b = self.args  # a/b
+        return (a.diff(wrt)*b - a*b.diff(wrt))/b**2
+        # return (self.args[0] * self.args[1]**-One).diff(wrt)
 
 
 class Pow(Binary):
@@ -528,11 +543,11 @@ class ITE(Basic):
     def __init__(self, cond, if_true, if_false):
         self.args = (cond, if_true, if_false)
 
-    def evalb(self):
+    def _eval(self):
         return self.args[1] if self.args[0].evalb() else self.args[2]
 
     def evalf(self):
-        return self.evalb().evalf()
+        return self._eval().evalf()
 
     def __str__(self):
         return '({1} if {0} else {2})'.format(*self.args)
@@ -555,6 +570,7 @@ class Function(Basic):
 
 class Function1(Function):
 
+    @_wrap_numbers
     def __init__(self, arg):
         self.args = (arg,)
 
@@ -589,6 +605,15 @@ class exp(Function1):
     @staticmethod
     def _deriv(arg):
         return exp(arg)
+
+
+class sqrt(Function1):
+    _function = math.sqrt
+    _func_str = 'sqrt'
+
+    @staticmethod
+    def _deriv(arg):
+        return 1/(2*sqrt(arg))
 
 
 class log(Function1):
@@ -704,6 +729,26 @@ class Matrix(Basic):
 
 
 def lambdify(args, exprs):
+    try:
+        nargs = len(args)
+    except TypeError:
+        args = (args,)
+        nargs = 1
+    try:
+        nexprs = len(exprs)
+    except TypeError:
+        exprs = (exprs,)
+        nexprs = 1
+
+    @_wrap_numbers
     def f(*inp):
+        if len(inp) != nargs:
+            raise TypeError("Incorrect number of arguments")
+        try:
+            len(inp)
+        except TypeError:
+            inp = (inp,)
         subsd = dict(zip(args, inp))
-        return [expr.subs(subsd).evalf() for expr in exprs]
+        return [expr.subs(subsd).evalf() for expr in exprs][
+            0 if nexprs == 1 else slice(None)]
+    return f
