@@ -1,0 +1,11 @@
+**/*.pyc
+**/__pycache__
+.cache/
+dist/
+MANIFEST
+build/
+**/.ipynb_checkpoints/
+doc/
+examples/*.wav
+examples/*.html
+examples/thumbs/

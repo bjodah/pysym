@@ -1,0 +1,25 @@
+package:
+    name: pysym
+    version: 0.1.0.dev0
+
+source:
+    path: ../
+
+build:
+    number: 0
+
+requirements:
+    build:
+        - python
+    run:
+        - python
+
+test:
+    imports:
+        - pysym
+    requires:
+        - pytest
+
+about:
+    home: https://github.com/bjodah/pysym
+    license: BSD

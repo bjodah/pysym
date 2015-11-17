@@ -1,0 +1,87 @@
+pysym
+=====
+
+.. image:: http://hera.physchem.kth.se:8080/github.com/bjodah/pysym/status.svg?branch=master
+   :target: http://hera.physchem.kth.se:8080/github.com/bjodah/pysym
+   :alt: Build status
+.. image:: https://img.shields.io/pypi/v/pysym.svg
+   :target: https://pypi.python.org/pypi/pysym
+   :alt: PyPI version
+.. image:: https://img.shields.io/pypi/l/pysym.svg
+   :target: https://github.com/bjodah/pysym/blob/master/LICENSE
+   :alt: License
+.. image:: http://img.shields.io/badge/benchmarked%20by-asv-green.svg?style=flat
+   :target: http://hera.physchem.kth.se/~pysym/benchmarks
+   :alt: airspeedvelocity
+.. image:: http://hera.physchem.kth.se/~pysym/master/htmlcov/coverage.svg
+   :target: http://hera.physchem.kth.se/~pysym/master/htmlcov
+   :alt: coverage
+
+`pysym <https://github.com/bjodah/pysym>`_ is an experimental
+Python package for symbolic manipulation with limited scope (as in minimal).
+It tries to stay compatible with the API of `SymPy <http://www.sympy.org>`_.
+
+The capabilities include:
+
+- Differentiation
+- Numerical evaluation (including "lambdify" support)
+
+The above capabilities are exactly what is needed by
+`pyodesys <https://pypi.python.org/pypi/pyodesys>`
+and `pyodesys <https://pypi.python.org/pypi/pyodesys>`. The goal of pysym
+is to be a lightweight and fast (thanks to it's specialization) alternative
+to SymPy when no other capabilities are needed (such as series expansion, integration,
+equation solving, etc.).
+
+Documentation
+-------------
+Auto-generated API documentation is found here: `<https://bjodah.github.com/pysym>`_
+
+Installation
+------------
+Simplest way to install pysym and its (optional) dependencies is to use the `conda package manager <http://conda.pydata.org/docs/>`_:
+
+::
+
+   $ pip install --user pysym pytest
+   $ python -m pytest --pyargs pysym
+
+or using conda:
+
+::
+
+   $ conda install -c bjodah pysym pytest
+   $ python -m pytest --pyargs pysym
+
+There are no requirements outside the Python standard library.
+
+Source distribution is available here:
+`<https://pypi.python.org/pypi/pysym>`_
+
+Example
+-------
+Differentiation
+
+.. code:: python
+
+   >>> from pysym import Symbol, tan
+   >>> x, y = map(Symbol, 'x y'.split())
+   >>> expr = x*y**2 - tan(2*x)
+   >>> print(expr.diff(x))
+   ((((1 + (tan((2*x))**2))*2)*-1) + (y**2))
+
+
+for more examples, see `examples/ <https://github.com/bjodah/pysym/tree/master/examples>`_, and rendered jupyter notebooks here:
+`<http://hera.physchem.kth.se/~pysym/master/examples>`_
+
+License
+-------
+The source code is Open Source and is released under the simplified 2-clause BSD license. See `LICENSE <LICENSE>`_ for further details.
+Contributors are welcome to suggest improvements at https://github.com/bjodah/pysym
+
+Author
+------
+Björn I. Dahlgren, contact:
+
+- gmail address: bjodah
+- kth.se address: bda
