@@ -18,5 +18,5 @@ script:
   - git config --global user.name "drone"
   - git config --global user.email ${MY_SERVER}
   - if [[ "$DRONE_BRANCH" == "master" ]]; then ./scripts/github_upload.sh doc/_build/html bjodah pysym gh-pages; fi
-  # - if [[ "$DRONE_BRANCH" == "master" ]]; then scp -r benchmarks/* ${MY_SERVER}:~; fi
-  # - if [[ "$DRONE_BRANCH" == "master" ]]; then ssh ${MY_SERVER} 'source /etc/profile; asv run -k -e >asv-run.log; asv publish>asv-publish.log'; fi
+  - if [[ "$DRONE_BRANCH" == "master" ]]; then scp -r benchmarks/* ${MY_SERVER}:~; fi
+  - if [[ "$DRONE_BRANCH" == "master" ]]; then ssh ${MY_SERVER} 'source /etc/profile; asv run -k -e >asv-run.log; asv publish>asv-publish.log'; fi
