@@ -68,7 +68,7 @@ Differentiation
    >>> x, y = map(Symbol, 'x y'.split())
    >>> expr = x*y**2 - tan(2*x)
    >>> print(expr.diff(x))
-   ((((1 + (tan((2*x))**2))*2)*-1) + (y**2))
+   ((y**2) - ((1 + (tan((2*x))**2))*2))
 
 
 for more examples, see `examples/ <https://github.com/bjodah/pysym/tree/master/examples>`_, and rendered jupyter notebooks here:

@@ -173,3 +173,12 @@ def test_diff3():
                          [x**i/(y**i - i/z) for i in range(2)])
     dfdx = f.diff(x)
     assert dfdx.has(y)
+
+
+def test_subs_multi():
+    s1, s2 = map(Symbol, 's1 s2'.split())
+    subsd = {s1: Number(1), s2: Number(1)}
+    one_a = s1.subs(subsd)
+    assert abs((one_a - 1).evalf()) < 1e-16
+    one_b = one_a.subs(subsd)
+    assert abs((one_b - 1).evalf()) < 1e-16
