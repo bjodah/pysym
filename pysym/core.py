@@ -62,7 +62,7 @@ class BasicComparator(object):
             return False
 
 
-def _collect(args, collect_to, drop=()):
+def _collect(args, collect_to, drop=(), merge=None):
     count = 0
     previous = None
     new_args = []
@@ -78,11 +78,17 @@ def _collect(args, collect_to, drop=()):
                     new_args.append(collect_to.create(
                         (previous, Number(count))))
                 else:
-                    new_args.append(previous)
+                    if merge is not None and isinstance(previous, merge):
+                        new_args.extend(previous.args)
+                    else:
+                        new_args.append(previous)
         count = 1
         previous = arg
     if count == 1:
-        new_args.append(previous)
+        if merge is not None and isinstance(previous, merge):
+            new_args.extend(previous.args)
+        else:
+            new_args.append(previous)
     elif count > 1:
         new_args.append(collect_to.create(
             (previous, Number(count))))
@@ -166,6 +172,9 @@ class Basic(object):
         for key, val in subs_dict.items():
             result = result._subs(key, val)
         return result
+
+    def expand(self):
+        return self.create(tuple(arg.expand() for arg in self.args))
 
     @_wrap_numbers
     def __add__(self, other):
@@ -315,6 +324,9 @@ class Atomic(Basic):
     def _subs(self, symb, repl):
         return repl if self is symb else self
 
+    def expand(self):
+        return self
+
 
 class Number(Atomic):
 
@@ -398,11 +410,10 @@ class Reduction(Operator):
 
     @classmethod
     def create(cls, args):
-        instance = cls(*args)
-        if len(instance.args) == 1:
-            return instance.args[0]
+        if len(args) == 1:
+            return args[0]
         else:
-            return instance
+            return super(Reduction, cls).create(args)
 
     def evalf(self):
         return functools.reduce(self._operator, (
@@ -421,8 +432,13 @@ class Add(Reduction):
     _operator = operator.add
     _op_str = ' + '
 
-    def __init__(self, *args):
-        self.args = _collect(args, Mul, (Zero, Mul(Zero)))
+    @classmethod
+    def create(cls, args):
+        if len(args) == 0:
+            return Zero
+        else:
+            return super(Add, cls).create(
+                _collect(args, Mul, (Zero, Mul(Zero)), Add))
 
     def __iadd__(self, other):
         self.args += (other,)
@@ -436,17 +452,26 @@ class Add(Reduction):
         else:
             return super(Add, self).evalf()
 
+    def insert_mult(self, factor):
+        return self.create(tuple(Mul.create((arg, factor))
+                                 for arg in self.args))
+
 
 class Mul(Reduction):
 
     _operator = operator.mul
     _op_str = '*'
 
-    def __init__(self, *args):
-        if Zero.found_in(args):
-            self.args = (Zero,)
+    @classmethod
+    def create(cls, args):
+        if len(args) == 0:
+            return One
         else:
-            self.args = _collect(args, Pow, (One,))
+            if Zero.found_in(args):
+                return Zero
+            else:
+                return super(Mul, cls).create(
+                    _collect(args, Pow, (One,), Mul))
 
     def __imul__(self, other):
         self.args += (other,)
@@ -457,6 +482,18 @@ class Mul(Reduction):
                 arg.diff(wrt) if i == idx else arg
                 for i, arg in enumerate(self.args)))
             for idx in range(len(self.args))))
+
+    def expand(self):
+        for idx, arg in enumerate(self.args):
+            if isinstance(arg, Add):
+                if idx == 0:  # use of `create` guarantees len(args) > 1
+                    return arg.insert_mult(Mul.create(
+                        self.args[idx+1:])).expand()
+                if idx > 0:  # adsorb into first Add
+                    return Mul.create((
+                        arg.insert_mult(Mul.create(self.args[:idx]))),
+                        + self.args[idx + 1:]).expand()
+        return self
 
 
 class Binary(Operator):

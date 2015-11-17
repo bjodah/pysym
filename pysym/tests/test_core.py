@@ -93,7 +93,6 @@ def test_diff1():
     assert ((0/(1-x)).diff(x) == (0/(1-x)).diff(x)).evalb()
     f = x**0/(2 - 1*(0/x))
     dfdx = f.diff(x)
-    print(dfdx)
     assert dfdx.evalf() == 0
 
 
@@ -182,3 +181,30 @@ def test_subs_multi():
     assert abs((one_a - 1).evalf()) < 1e-16
     one_b = one_a.subs(subsd)
     assert abs((one_b - 1).evalf()) < 1e-16
+
+
+def _equal(expr1, expr2):
+    return (expr1.sorted() == expr2.sorted()).evalb() is True
+
+
+def test_denest():
+    x, y = Symbol('x'), Symbol('y')
+    expr = ((x + 1)*y + 1).expand()
+    ref = x*y + y + 1
+    assert _equal(expr, ref)
+
+
+def test_expand():
+    x, y = Symbol('x'), Symbol('y')
+    expr1 = ((x+1)*y).expand()
+    ref1 = x*y + 1*y
+    assert _equal(expr1, ref1)
+
+    expr2 = ((x**2 + 1)*(y + 2)).expand()
+    ref2 = x**2 * y + x**2 * 2 + 1*y + 1*2
+
+    assert _equal(expr2, ref2)
+
+    expr3 = ((x**2 + 1)*(y**2 + y + 2)).expand()
+    ref3 = x**2 * y**2 + x**2 * y + x**2 * 2 + y**2 + y + 2
+    assert _equal(expr3, ref3)
