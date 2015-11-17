@@ -27,9 +27,9 @@ The capabilities include:
 - Numerical evaluation (including "lambdify" support)
 
 The above capabilities are exactly what is needed by
-`pyodesys <https://pypi.python.org/pypi/pyodesys>`
-and `pyodesys <https://pypi.python.org/pypi/pyodesys>`. The goal of pysym
-is to be a lightweight and fast (thanks to it's specialization) alternative
+`pyodesys <https://pypi.python.org/pypi/pyodesys>`_
+and `pyodesys <https://pypi.python.org/pypi/pyodesys>`_. The goal of pysym
+is to be a lightweight and fast (thanks to its specialization) alternative
 to SymPy when no other capabilities are needed (such as series expansion, integration,
 equation solving, etc.).
 
@@ -39,14 +39,14 @@ Auto-generated API documentation is found here: `<https://bjodah.github.com/pysy
 
 Installation
 ------------
-Simplest way to install pysym and its (optional) dependencies is to use the `conda package manager <http://conda.pydata.org/docs/>`_:
+Simplest way to install pysym and its (optional) dependencies is to use pip:
 
 ::
 
    $ pip install --user pysym pytest
    $ python -m pytest --pyargs pysym
 
-or using conda:
+or the `conda package manager <http://conda.pydata.org/docs/>`_:
 
 ::
 
