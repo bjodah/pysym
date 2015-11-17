@@ -449,6 +449,7 @@ class Add(Reduction):
         else:
             return super(Add, self).evalf()
 
+
 class Mul(Reduction):
 
     _operator = operator.mul

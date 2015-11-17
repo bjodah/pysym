@@ -12,6 +12,7 @@ def test_Symbol():
     s2 = Symbol('s')
     assert s1 is s2
 
+
 def test_pow():
     s = Symbol('s')
     assert (s**1).has(s)
@@ -19,6 +20,7 @@ def test_pow():
     Zero = Number(0)
     One = Number(1)
     assert Zero**Zero is One
+
 
 def test_Symbol_add():
     x, y = map(Symbol, 'x y'.split())
@@ -93,6 +95,7 @@ def test_diff1():
     dfdx = f.diff(x)
     print(dfdx)
     assert dfdx.evalf() == 0
+
 
 def test_subs():
     x, y = map(Symbol, 'x y'.split())
@@ -169,3 +172,4 @@ def test_diff3():
     f = functools.reduce(operator.add,
                          [x**i/(y**i - i/z) for i in range(2)])
     dfdx = f.diff(x)
+    assert dfdx.has(y)
