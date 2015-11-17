@@ -45,7 +45,7 @@ tests = [
 
 with open(os.path.join(pkg_name, '__init__.py')) as f:
     long_description = f.read().split('"""')[1]
-descr = 'Straightforward numerical integration of ODE systems from SymPy.'
+descr = 'Minimal symbolic manipulation framework.'
 setup_kwargs = dict(
     name=pkg_name,
     version=__version__,

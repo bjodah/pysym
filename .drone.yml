@@ -5,8 +5,6 @@ env:
   - MY_SERVER=pysym@hera.physchem.kth.se
 script:
   - if [[ "$DRONE_BRANCH" =~ ^v[0-9]+.[0-9]?* ]]; then export PYSYM_RELEASE_VERSION=$DRONE_BRANCH; echo ${PYSYM_RELEASE_VERSION} | tail -c +2 > __conda_version__.txt; fi
-  - pip install --user pyodeint pycvodes pygslodeiv2
-  - pip3 install --user pyodeint pycvodes pygslodeiv2
   - PYTHONPATH=$(pwd) ./scripts/run_tests.sh --cov pysym --cov-report html
   - python2 setup.py sdist
   - pip install dist/*.tar.gz
@@ -20,5 +18,5 @@ script:
   - git config --global user.name "drone"
   - git config --global user.email ${MY_SERVER}
   - if [[ "$DRONE_BRANCH" == "master" ]]; then ./scripts/github_upload.sh doc/_build/html bjodah pysym gh-pages; fi
-  - if [[ "$DRONE_BRANCH" == "master" ]]; then scp -r benchmarks/* ${MY_SERVER}:~; fi
-  - if [[ "$DRONE_BRANCH" == "master" ]]; then ssh ${MY_SERVER} 'source /etc/profile; asv run -k -e >asv-run.log; asv publish>asv-publish.log'; fi
+  # - if [[ "$DRONE_BRANCH" == "master" ]]; then scp -r benchmarks/* ${MY_SERVER}:~; fi
+  # - if [[ "$DRONE_BRANCH" == "master" ]]; then ssh ${MY_SERVER} 'source /etc/profile; asv run -k -e >asv-run.log; asv publish>asv-publish.log'; fi
