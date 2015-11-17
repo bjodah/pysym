@@ -10,3 +10,5 @@ examples/*.wav
 examples/*.html
 examples/thumbs/
 pysym.egg-info
+benchmarks/*
+!benchmarks/benchmarks

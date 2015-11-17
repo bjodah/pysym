@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, division, print_function)
 
+import functools
+import operator
+
 from ..core import Symbol, Add, gamma, Number, sin, cos, Mul, ITE
 
 
@@ -9,6 +12,13 @@ def test_Symbol():
     s2 = Symbol('s')
     assert s1 is s2
 
+def test_pow():
+    s = Symbol('s')
+    assert (s**1).has(s)
+    assert (s**0).evalf() == 1
+    Zero = Number(0)
+    One = Number(1)
+    assert Zero**Zero is One
 
 def test_Symbol_add():
     x, y = map(Symbol, 'x y'.split())
@@ -35,6 +45,8 @@ def test_Add():
 
 def test_division():
     x, y = map(Symbol, 'x y'.split())
+    assert (0/x == 0/x).evalb()
+
     expr = x/y
     assert abs(expr.subs({x: Number(3), y: Number(7)}).evalf() - 3/7) < 1e-15
 
@@ -75,6 +87,12 @@ def test_diff1():
     assert (sinx.diff(x) == cos(x)).evalb()
     assert not (sinx.diff(x) == sin(x)).evalb()
 
+    assert ((0/(1+x)).diff(x) == (0/(1+x)).diff(x)).evalb()
+    assert ((0/(1-x)).diff(x) == (0/(1-x)).diff(x)).evalb()
+    f = x**0/(2 - 1*(0/x))
+    dfdx = f.diff(x)
+    print(dfdx)
+    assert dfdx.evalf() == 0
 
 def test_subs():
     x, y = map(Symbol, 'x y'.split())
@@ -144,3 +162,10 @@ def test_ITE():
     ite = ITE(x < y, Number(3), Number(7))
     assert abs(ite.subs(x1y2).evalf() - 3) < 1e-15
     assert abs(ite.subs(x1y0).evalf() - 7) < 1e-15
+
+
+def test_diff3():
+    x, y, z = map(Symbol, 'x y z'.split())
+    f = functools.reduce(operator.add,
+                         [x**i/(y**i - i/z) for i in range(2)])
+    dfdx = f.diff(x)

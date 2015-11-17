@@ -75,15 +75,16 @@ def _collect(args, collect_to, drop=()):
                 continue
             else:
                 if count > 1:
-                    new_args.append(collect_to(previous, Number(count)))
+                    new_args.append(collect_to.create(
+                        (previous, Number(count))))
                 else:
                     new_args.append(previous)
         count = 1
         previous = arg
-    if count > 1:
-        new_args.append(collect_to(previous, Number(count)))
-    else:
+    if count == 1:
         new_args.append(previous)
+    elif count > 1:
+        new_args.append(collect_to(previous, Number(count)))
     return tuple(new_args)
 
 
@@ -102,7 +103,7 @@ def _associative(Cls, lhs, rhs, collect_to=None, drop=()):
         if collect_to is not None:
             args = _collect(args, collect_to, drop)
 
-    return Cls.from_args(args)
+    return Cls.create(args)
 
 
 class Basic(object):
@@ -111,6 +112,9 @@ class Basic(object):
 
     @property
     def is_atomic(self):
+        return False
+
+    def is_zero(self):
         return False
 
     def __init__(self, *args):
@@ -163,44 +167,49 @@ class Basic(object):
         return result
 
     @_wrap_numbers
-    def __add__(lhs, rhs):
-        return _associative(Add, lhs, rhs, Mul, (Zero, Mul(Zero)))
+    def __add__(self, other):
+        return _associative(Add, self, other, Mul, (Zero, Mul(Zero)))
+
+    def __radd__(self, other):
+        return self+other
 
     @_wrap_numbers
-    def __mul__(lhs, rhs):
-        return _associative(Mul, lhs, rhs, Pow, (One,))
+    def __mul__(self, other):
+        return _associative(Mul, self, other, Pow, (One,))
 
-    @_wrap_numbers
     def __rmul__(self, other):
         return self*other
 
     @_wrap_numbers
     def __pow__(base, exponent):
-        return Pow(base, exponent)
+        return Pow.create((base, exponent))
 
     @_wrap_numbers
     def __truediv__(num, denom):
-        return Fraction(num, denom)
+        return Fraction.create((num, denom))
 
     @_wrap_numbers
     def __rtruediv__(denom, num):
-        return Fraction(num, denom)
+        return Fraction.create((num, denom))
 
     @_deprecated('Use "from __future__ import division"')
     @_wrap_numbers
     def __div__(num, denom):
-        return Fraction(num, denom)
+        return Fraction.create((num, denom))
 
     @_deprecated('Use "from __future__ import division"')
     @_wrap_numbers
     def __rdiv__(denom, num):
-        return Fraction(num, denom)
+        return Fraction.create((num, denom))
 
     @_wrap_numbers
-    def __sub__(lhs, rhs):
-        neg = -One*rhs
-        instance = lhs + neg
+    def __sub__(self, other):
+        neg = -One*other
+        instance = self + neg
         return instance
+
+    def __rsub__(self, other):
+        return self - other
 
     @_wrap_numbers
     def __neg__(self):
@@ -312,6 +321,9 @@ class Number(Atomic):
 
     _NUMBER_TYPES = (int, float)
 
+    def is_zero(self):
+        return self.args[0] == 0
+
     @classmethod
     def make(cls, arg):
         if isinstance(arg, cls._NUMBER_TYPES):
@@ -399,7 +411,7 @@ class Reduction(Operator):
 
     @classmethod
     def create(cls, args):
-        instance = cls.from_args(args)
+        instance = cls(*args)
         if len(instance.args) == 1:
             return instance.args[0]
         else:
@@ -431,6 +443,11 @@ class Add(Reduction):
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))
 
+    def evalf(self):
+        if len(self.args) == 0:
+            return Zero
+        else:
+            return super(Add, self).evalf()
 
 class Mul(Reduction):
 
@@ -459,6 +476,17 @@ class Fraction(Binary):
     _commutative = False
     _op_str = '(%s/%s)'
 
+    @classmethod
+    def create(cls, args):
+        instance = cls(*args)
+        if instance.args[1].is_zero():
+            raise ZeroDivisionError
+        else:
+            if instance.args[0].is_zero():
+                return Zero
+            else:
+                return instance
+
     def evalf(self):
         return self.args[0].evalf() / self.args[1].evalf()
 
@@ -483,6 +511,15 @@ class Pow(Binary):
             return exp(exponent)*exponent.diff(wrt)
         else:
             return Zero
+
+    @classmethod
+    def create(cls, args):
+        base, exponent = args
+        if exponent.is_zero():
+            return One
+        if base.is_zero():
+            return Zero
+        return cls(*args)
 
 
 class ITE(Basic):
@@ -525,7 +562,8 @@ class Function1(Function):
         raise NotImplementedError
 
     def diff(self, wrt):
-        return Mul.create((self._deriv(self.args[0]), self.args[0].diff(wrt)))
+        return Mul.create((self._deriv(self.args[0]),
+                           self.args[0].diff(wrt)))
 
 
 class gamma(Function1):
