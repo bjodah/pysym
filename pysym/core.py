@@ -159,13 +159,14 @@ class Basic(object):
         return False
 
     def _subs(self, symb, repl):
-        if symb is self:
-            raise ValueError("Impossible, bug!")
-        else:
-            return self.__class__(*tuple(
-                repl if arg is symb else arg._subs(symb, repl)
-                for arg in self.args
-            ))
+        if self.has(symb):
+            if symb is self:
+                raise ValueError("Impossible, bug!")
+            else:
+                return self.__class__(*tuple(
+                    repl if arg is symb else arg._subs(symb, repl)
+                    for arg in self.args
+                ))
 
     def subs(self, subs_dict):
         result = self
