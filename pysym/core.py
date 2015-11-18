@@ -163,10 +163,12 @@ class Basic(object):
             if symb is self:
                 raise ValueError("Impossible, bug!")
             else:
-                return self.__class__(*tuple(
+                return self.create(tuple(
                     repl if arg is symb else arg._subs(symb, repl)
                     for arg in self.args
                 ))
+        else:
+            return self
 
     def subs(self, subs_dict):
         result = self
@@ -404,7 +406,7 @@ class Operator(Basic):
 
     def sorted(self):
         if self._commutative:
-            return self.__class__(*sorted(self.args, key=BasicComparator))
+            return self.create(sorted(self.args, key=BasicComparator))
         else:
             return self
 
