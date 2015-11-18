@@ -219,7 +219,6 @@ class Basic(object):
     def __rsub__(self, other):
         return self - other
 
-    @_wrap_numbers
     def __neg__(self):
         return -One * self
 
@@ -339,6 +338,8 @@ class Number(Atomic):
     def make(cls, arg):
         if isinstance(arg, cls._NUMBER_TYPES):
             return cls(arg)
+        if hasattr(arg, 'dtype'):  # NumPy object
+            return cls(arg)
         return arg
 
     def diff(self, wrt):
@@ -354,6 +355,7 @@ class Number(Atomic):
     def __neg__(self):
         return Number(-self.args[0])
 
+    @_wrap_numbers
     def __eq__(self, other):
         if isinstance(other, (int, float)):
             return self.args[0] == other
@@ -434,14 +436,12 @@ class Add(Reduction):
 
     @classmethod
     def create(cls, args):
+        args = tuple(filter(lambda x: x is not Zero, args))
         if len(args) == 0:
             return Zero
         else:
             return super(Add, cls).create(
                 _collect(args, Mul, (Zero, Mul(Zero)), Add))
-
-    def __iadd__(self, other):
-        self.args += (other,)
 
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))
@@ -473,9 +473,6 @@ class Mul(Reduction):
                 return super(Mul, cls).create(
                     _collect(args, Pow, (One,), Mul))
 
-    def __imul__(self, other):
-        self.args += (other,)
-
     def diff(self, wrt):
         return Add.create(tuple(
             Mul.create(tuple(
@@ -489,7 +486,7 @@ class Mul(Reduction):
                 if idx == 0:  # use of `create` guarantees len(args) > 1
                     return arg.insert_mult(Mul.create(
                         self.args[idx+1:])).expand()
-                if idx > 0:  # adsorb into first Add
+                if idx > 0:  # absorb into first Add
                     return Mul.create((
                         arg.insert_mult(Mul.create(self.args[:idx]))),
                         + self.args[idx + 1:]).expand()
@@ -519,7 +516,7 @@ class Sub(Binary):
         return cls(*args)
 
     def diff(self, wrt):
-        return self.args[0].diff(wrt) - self.args[1].diff(wrt)
+        return Sub.create((self.args[0].diff(wrt), self.args[1].diff(wrt)))
 
 
 class Fraction(Binary):
@@ -543,7 +540,13 @@ class Fraction(Binary):
 
     def diff(self, wrt):
         a, b = self.args  # a/b
-        return (a.diff(wrt)*b - a*b.diff(wrt))/b**2
+        return self.create((
+            Sub.create((
+                a.diff(wrt)*b,
+                Mul.create((a, b.diff(wrt)))
+            )),
+            Pow.create((b, Two))
+        ))
         # return (self.args[0] * self.args[1]**-One).diff(wrt)
 
 
@@ -561,7 +564,7 @@ class Pow(Binary):
         base, exponent = self.args
         exponent *= log(base)
         if exponent.has(wrt):
-            return exp(exponent)*exponent.diff(wrt)
+            return Mul.create((exp(exponent), exponent.diff(wrt)))
         else:
             return Zero
 
@@ -724,14 +727,46 @@ class Vector(Basic):
     def __len__(self):
         return len(self.args)
 
+    def diff(self, wrt):
+        return self.__class__(tuple(arg.diff(wrt) for arg in self.args))
+
+    def __iter__(self):
+        return iter(self.args)
+
+    def __getitem__(self, key):
+        return self.args[key]
+
 
 class Matrix(Basic):
 
-    def __init__(self, nrows, ncols, callback):
+    def __init__(self, nrows, ncols, source):
+        if callable(source):
+            callback = source
+        else:
+            def callback(ri, ci):
+                try:
+                    return source[ri, ci]
+                except TypeError:
+                    return source[ri*ncols + ci]
         self.args = (nrows, ncols) + tuple(
             callback(ri, ci) for ri, ci in itertools.product(
                 range(nrows), range(ncols))
         )
+
+    def _subs(self, symb, repl):
+        return self.__class__(self.nrows, self.ncols,
+                              self.flatten()._subs(symb, repl))
+
+    def __iter__(self):
+        if self.shape[0] == 1:
+            for ci in range(self.ncols):
+                yield self[0, ci]
+        elif self.shape[1] == 1:
+            for ri in range(self.nrows):
+                yield self[ri, 0]
+        else:
+            for ri in range(self.nrows):
+                yield self.__class__(1, self.ncols, lambda i, j: self[ri, j])
 
     @property
     def nrows(self):
@@ -745,6 +780,10 @@ class Matrix(Basic):
     def shape(self):
         return (self.nrows, self.ncols)
 
+    def flatten(self):
+        return Vector(*tuple(self[ri, ci] for ri, ci in itertools.product(
+            range(self.nrows), range(self.ncols))))
+
     def _get_element(self, idx):
         return self.args[2+idx]
 
@@ -753,39 +792,31 @@ class Matrix(Basic):
         return self._get_element(self.ncols*ri + ci)
 
     def jacobian(self, iterable):
-        iterable = tuple(iterable)
-        if self.ncols != 1:
-            raise NotImplementedError
-        return self.__class__(
-            self.nrows, len(iterable),
-            lambda ri, ci: self._get_element[ri].diff(iterable[ci]))
+        try:
+            shape = iterable.shape
+            if len(shape) > 2:
+                raise ValueError
+        except AttributeError:
+            iterable = tuple(iterable)
+        else:
+            if len(shape) == 2:
+                if shape[0] != 1 and shape[1] != 1:
+                    raise ValueError('need column or row vector')
+                if shape[0] == 1:
+                    iterable = tuple(iterable[0, i] for i in range(shape[1]))
+                else:
+                    iterable = tuple(iterable[i, 0] for i in range(shape[0]))
+        if self.ncols != 1 and self.nrows != 1:
+            raise TypeError('jacobian only defined for row or column matrices')
+        if self.ncols == 1:
+            return self.__class__(
+                self.nrows, len(iterable),
+                lambda ri, ci: self._get_element(ri).diff(iterable[ci]))
+        elif self.nrows == 1:
+            return self.__class__(
+                max(self.shape), len(iterable),
+                lambda ri, ci: self._get_element(ri).diff(iterable[ci]))
 
     def evalf(self):
         return [[self[ri, ci].evalf() for ci in range(self.ncols)]
                 for ri in range(self.nrows)]
-
-
-def lambdify(args, exprs):
-    try:
-        nargs = len(args)
-    except TypeError:
-        args = (args,)
-        nargs = 1
-    try:
-        nexprs = len(exprs)
-    except TypeError:
-        exprs = (exprs,)
-        nexprs = 1
-
-    @_wrap_numbers
-    def f(*inp):
-        if len(inp) != nargs:
-            raise TypeError("Incorrect number of arguments")
-        try:
-            len(inp)
-        except TypeError:
-            inp = (inp,)
-        subsd = dict(zip(args, inp))
-        return [expr.subs(subsd).evalf() for expr in exprs][
-            0 if nexprs == 1 else slice(None)]
-    return f
