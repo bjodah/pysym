@@ -44,6 +44,7 @@
     // version.
     "matrix": {
         "sympy": [],
+        "symengine-python": [],
         "numpy": [],
     },
 
