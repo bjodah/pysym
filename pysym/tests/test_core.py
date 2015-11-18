@@ -107,11 +107,24 @@ def test_subs():
 
 def test_diff2():
     x, y = map(Symbol, 'x y'.split())
-    assert x.diff(x) == 1
-    assert y.diff(x) == 0
+    assert (x.diff(x) == 1).evalb() is True
+    assert (y.diff(x) == 0).evalb() is True
 
     x5 = x*x*x*x*x
     assert abs(x5.diff(x).subs({x: Number(7)}).evalf() - 5*7**4) < 4e-12
+
+
+def test_diff3():
+    x, y, z = map(Symbol, 'x y z'.split())
+    f = functools.reduce(operator.add,
+                         [x**i/(y**i - i/z) for i in range(2)])
+    dfdx = f.diff(x)
+    assert dfdx.has(y)
+
+
+def test_diff4():
+    x, y = map(Symbol, 'x y'.split())
+    assert ((3*x).diff(y) == Number(0)).evalb() is True
 
 
 def test_repr():
@@ -164,14 +177,6 @@ def test_ITE():
     ite = ITE(x < y, Number(3), Number(7))
     assert abs(ite.subs(x1y2).evalf() - 3) < 1e-15
     assert abs(ite.subs(x1y0).evalf() - 7) < 1e-15
-
-
-def test_diff3():
-    x, y, z = map(Symbol, 'x y z'.split())
-    f = functools.reduce(operator.add,
-                         [x**i/(y**i - i/z) for i in range(2)])
-    dfdx = f.diff(x)
-    assert dfdx.has(y)
 
 
 def test_subs_multi():
