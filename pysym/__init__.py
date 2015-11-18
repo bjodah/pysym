@@ -10,7 +10,7 @@ from .core import (
     Symbol, Number, ITE, gamma, abs, exp, log, sin, cos, tan, asin, acos, atan,
     Vector, Matrix, sqrt
 )
-from .util import lambdify, Lambdify, symbols
+from .util import lambdify, Lambdify, symbols, symarray
 
 
 pi = 4*atan(1)

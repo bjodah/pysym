@@ -1,3 +1,5 @@
+from __future__ import (absolute_import, division, print_function)
+
 
 import functools
 import operator
@@ -5,7 +7,7 @@ import operator
 import pysym
 
 
-class Diff:
+class TimeDiff:
 
     def setup(self):
         x, y, z = self.symbols = map(pysym.Symbol, 'x y z'.split())

@@ -12,6 +12,15 @@ def symbols(s):
         return tup
 
 
+def symarray(prefix, shape):
+    import numpy as np
+    arr = np.empty(shape, dtype=object)
+    for index in np.ndindex(shape):
+        arr[index] = Symbol('%s_%s' % (
+            prefix, '_'.join(map(str, index))))
+    return arr
+
+
 def lambdify(args, exprs):
     """
     lambdify mimics sympy.lambdify
