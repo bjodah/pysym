@@ -8,37 +8,63 @@ import warnings
 import weakref
 
 
-def sort_collect_drop_merge(args, collect_to, drop=(), merge=None):
-    count = 0
-    previous = None
+def collect(sorted_args, collect_to):
+    nargs = len(sorted_args)
+    if nargs <= 1:
+        return sorted_args
+    prev = sorted_args[0]
+    count = 1
     new_args = []
-    for arg in sorted(args, key=BasicComparator):
-        if arg.found_in(drop):
-            continue
-        if count > 0:
-            if arg is previous:
-                count += 1
-                continue
+
+    def add(arg, count):
+        if count == 1:
+            new_args.append(arg)
+        elif count > 1:
+            new_args.append(collect_to.create(
+                (arg, Number(count))
+            ))
+
+    for idx, arg in enumerate(sorted_args[1:], 1):
+        is_last = (idx == (nargs - 1))
+        if arg is prev:
+            count += 1
+            if is_last:
+                add(arg, count)
             else:
-                if count > 1:
-                    new_args.append(collect_to.create(
-                        (previous, Number(count))))
-                else:
-                    if merge is not None and isinstance(previous, merge):
-                        new_args.extend(previous.args)
-                    else:
-                        new_args.append(previous)
-        count = 1
-        previous = arg
-    if count == 1:
-        if merge is not None and isinstance(previous, merge):
-            new_args.extend(previous.args)
+                continue
         else:
-            new_args.append(previous)
-    elif count > 1:
-        new_args.append(collect_to.create(
-            (previous, Number(count))))
+            add(prev, count)
+            if is_last:
+                add(arg, 1)
+            count = 1
+            prev = arg
     return tuple(new_args)
+
+
+def merge(args, mrg_cls=None):
+    if mrg_cls is None:
+        return args
+    new_args = []
+    merged = False
+    for arg in args:
+        if isinstance(arg, mrg_cls):
+            new_args.extend(arg.args)
+            merged = True
+        else:
+            new_args.append(arg)
+
+    if merged:
+        return merge(new_args, mrg_cls)
+    else:
+        return new_args
+
+
+def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
+    return collect(
+        sorted(filter(
+            lambda x: not x.found_in(drop),
+            merge(args, mrg_cls)
+        )), collect_to)
 
 
 cdef class BasicComparator:
@@ -51,7 +77,6 @@ cdef class BasicComparator:
         if not isinstance(other, BasicComparator):
             return self.__richcmp__(BasicComparator(other), op)
         typ1, typ2 = type(self.obj), type(other.obj)
-        print(typ1, typ2, op)
         if op == 0:  # <
             if typ1 is typ2:
                 if self.obj.is_atomic():
@@ -205,9 +230,12 @@ cdef class _Basic:
 
     def __mul__(self, other):
         other = Number.make(other)
-        return Mul.create((self, other))
+        return Mul.create((
+            Number.make(self),
+            Number.make(other)
+        ))
 
-    def __rmul__(other, self):
+    def __rmul__(self, other):
         return self*other
 
     def __pow__(base, exponent, modulo):
@@ -215,6 +243,7 @@ cdef class _Basic:
         return Pow.create((base, exponent))
 
     def __truediv__(num, denom):
+        num = Number.make(num)
         denom = Number.make(denom)
         return Fraction.create((num, denom))
 
@@ -244,18 +273,73 @@ cdef class _Basic:
 
     def __richcmp__(self, other_, int op):
         other = Number.make(other_)
+        typ1, typ2 = type(self), type(other)
         if op == 0:  # <
-            return Lt(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] < other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 < a2:
+                            return True
+                    return False
+            else:
+                return typ1.__class__.__name__ < typ2.__class__.__name__
         elif op == 1:  # <=
-            return Le(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] <= other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 <= a2:
+                            return True
+                    return False
+            else:
+                return typ1.__class__.__name__ <= typ2.__class__.__name__
         elif op == 2:  # ==
-            return Eq(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] == other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 == a2:
+                            return True
+                    return False
+            else:
+                return False
         elif op == 3:  # !=
-            return Ne(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] != other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 != a2:
+                            return True
+                    return False
+            else:
+                return True
         elif op == 4:  # >
-            return Gt(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] > other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 > a2:
+                            return True
+                    return False
+            else:
+                return typ1.__class__.__name__ > typ2.__class__.__name__
         elif op == 5:  # >=
-            return Ge(self, other)
+            if typ1 is typ2:
+                if self.is_atomic():
+                    return self.args[0] >= other.args[0]
+                else:
+                    for a1, a2 in zip(self.args, other.args):
+                        if a1 >= a2:
+                            return True
+                    return False
+            else:
+                return typ1.__class__.__name__ >= typ2.__class__.__name__
 
 
 class Basic(_Basic):
@@ -457,8 +541,11 @@ class Add(Reduction):
         if len(args) == 0:
             return Zero
         else:
-            return super(Add, cls).create(
-                sort_collect_drop_merge(args, Mul, (Zero, Mul(Zero)), Add))
+            args = merge_drop_sort_collect(args, Mul, (Zero, Mul(Zero)), Add)
+            if len(args) == 0:
+                return Zero
+            else:
+                return super(Add, cls).create(args)
 
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))
@@ -488,7 +575,7 @@ class Mul(Reduction):
                 return Zero
             else:
                 return super(Mul, cls).create(
-                    sort_collect_drop_merge(args, Pow, (One,), Mul))
+                    merge_drop_sort_collect(args, Pow, (One,), Mul))
 
     def diff(self, wrt):
         return Add.create(tuple(

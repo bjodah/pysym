@@ -31,6 +31,7 @@ class _deprecated(object):
             return func(*args, **kwargs)
         return f
 
+
 def collect(sorted_args, collect_to):
     nargs = len(sorted_args)
     if nargs == 1:
@@ -38,7 +39,7 @@ def collect(sorted_args, collect_to):
     prev = sorted_args[0]
     count = 1
     new_args = []
-    is_first = True
+
     def add(arg, count):
         if count == 1:
             new_args.append(arg)
@@ -62,6 +63,7 @@ def collect(sorted_args, collect_to):
             prev = arg
     return tuple(new_args)
 
+
 def merge(args, mrg_cls=None):
     if mrg_cls is None:
         return args
@@ -78,6 +80,7 @@ def merge(args, mrg_cls=None):
         return merge(new_args, mrg_cls)
     else:
         return new_args
+
 
 def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
     return collect(
@@ -136,7 +139,6 @@ class Basic(object):
                 return True
         else:
             return False
-
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(
@@ -439,7 +441,8 @@ class Add(Reduction):
             return Zero
         else:
             return super(Add, cls).create(
-                merge_drop_sort_collect(sorted(args), Mul, (Zero, Mul(Zero)), Add))
+                merge_drop_sort_collect(sorted(args), Mul,
+                                        (Zero, Mul(Zero)), Add))
 
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))

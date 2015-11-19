@@ -18,16 +18,14 @@ if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
         '--help-commands', 'egg_info', 'clean', '--version'):
     USE_CYTHON = os.path.exists('pysym/_pysym.pyx')
     ext = '.pyx' if USE_CYTHON else '.c'
-    ext_modules = [
-        Extension('pysym._pysym',
-                  ['pysym/_pysym'+ext],
-                  #language='c++', extra_compile_args=['-std=c++11'],
-              )
-    ]
+    ext_modules = [Extension(
+        'pysym._pysym',
+        ['pysym/_pysym'+ext]
+    )]
     if USE_CYTHON:
         from Cython.Build import cythonize
         ext_modules = cythonize(ext_modules,
-                                #include_path=['./include'],
+                                # include_path=['./include'],
                                 gdb_debug=True)
 
 
