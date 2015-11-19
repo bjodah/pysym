@@ -31,56 +31,60 @@ class _deprecated(object):
             return func(*args, **kwargs)
         return f
 
-
-def sort_collect_drop_merge(args, collect_to, drop=(), merge=None):
-    count = 0
-    previous = None
+def collect(sorted_args, collect_to):
+    nargs = len(sorted_args)
+    if nargs == 1:
+        return sorted_args
+    prev = sorted_args[0]
+    count = 1
     new_args = []
-    for arg in sorted(args):
-        if arg.found_in(drop):
-            continue
-        if count > 0:
-            if arg is previous:
-                count += 1
-                continue
+    is_first = True
+    def add(arg, count):
+        if count == 1:
+            new_args.append(arg)
+        elif count > 1:
+            new_args.append(collect_to.create(
+                (arg, Number(count))
+            ))
+    for idx, arg in enumerate(sorted_args[1:], 1):
+        is_last = (idx == (nargs - 1))
+        if arg is prev:
+            count += 1
+            if is_last:
+                add(arg, count)
             else:
-                if count > 1:
-                    new_args.append(collect_to.create(
-                        (previous, Number(count))))
-                else:
-                    if merge is not None and isinstance(previous, merge):
-                        new_args.extend(previous.args)
-                    else:
-                        new_args.append(previous)
-        count = 1
-        previous = arg
-    if count == 1:
-        if merge is not None and isinstance(previous, merge):
-            new_args.extend(previous.args)
+                continue
         else:
-            new_args.append(previous)
-    elif count > 1:
-        new_args.append(collect_to.create(
-            (previous, Number(count))))
+            add(prev, count)
+            if is_last:
+                add(arg, 1)
+            count = 1
+            prev = arg
     return tuple(new_args)
 
+def merge(args, mrg_cls=None):
+    if mrg_cls is None:
+        return args
+    new_args = []
+    merged = False
+    for arg in args:
+        if isinstance(arg, mrg_cls):
+            new_args.extend(arg.args)
+            merged = True
+        else:
+            new_args.append(arg)
 
-def create_associative(Cls, lhs, rhs, collect_to=None, drop=(), merge=None):
-    lhs_cls = isinstance(lhs, Cls)
-    rhs_cls = isinstance(rhs, Cls)
-    if not lhs_cls and not rhs_cls:
-        args = lhs, rhs
+    if merged:
+        return merge(new_args, mrg_cls)
     else:
-        if lhs_cls and rhs_cls:
-            args = lhs.args + rhs.args
-        elif isinstance(lhs, Cls):
-            args = lhs.args + (rhs,)
-        elif isinstance(rhs, Cls):
-            args = rhs.args + (lhs,)
-        if collect_to is not None:
-            args = sort_collect_drop_merge(args, collect_to, drop, merge)
+        return new_args
 
-    return Cls.create(args)
+def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
+    return collect(
+        sorted(filter(
+            lambda x: not x.found_in(drop),
+            merge(args, mrg_cls)
+        )), collect_to)
 
 
 @functools.total_ordering
@@ -176,14 +180,14 @@ class Basic(object):
 
     @_wrap_numbers
     def __add__(self, other):
-        return create_associative(Add, self, other, Mul, (Zero, Mul(Zero)), Add)
+        return Add.create((self, other))
 
     def __radd__(self, other):
         return self+other
 
     @_wrap_numbers
     def __mul__(self, other):
-        return create_associative(Mul, self, other, Pow, (One,))
+        return Mul.create((self, other))
 
     def __rmul__(self, other):
         return self*other
@@ -435,7 +439,7 @@ class Add(Reduction):
             return Zero
         else:
             return super(Add, cls).create(
-                sort_collect_drop_merge(args, Mul, (Zero, Mul(Zero)), Add))
+                merge_drop_sort_collect(sorted(args), Mul, (Zero, Mul(Zero)), Add))
 
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))
@@ -465,7 +469,7 @@ class Mul(Reduction):
                 return Zero
             else:
                 return super(Mul, cls).create(
-                    sort_collect_drop_merge(args, Pow, (One,), Mul))
+                    merge_drop_sort_collect(args, Pow, (One,), Mul))
 
     def diff(self, wrt):
         return Add.create(tuple(
