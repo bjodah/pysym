@@ -9,7 +9,7 @@ import operator
 import warnings
 import weakref
 
-from fastcache import clru_cache
+# from fastcache import clru_cache
 
 
 def _wrap_numbers(func):
@@ -134,7 +134,7 @@ class Basic(object):
         return cls(*args)
 
     @classmethod
-    @clru_cache(maxsize=1024*1024, typed=True)
+    # @clru_cache(maxsize=1024*1024, typed=True)
     def create(cls, args):
         return cls(*args)  # extra magic allowed
 

@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function)
 import functools
 import operator
 
-from ..core import Symbol, Add, gamma, Number, sin, cos, Mul, ITE
+from ..core import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp
 
 
 def test_Symbol():
@@ -213,3 +213,13 @@ def test_expand():
     expr3 = ((x**2 + 1)*(y**2 + y + 2)).expand()
     ref3 = x**2 * y**2 + x**2 * y + x**2 * 2 + y**2 + y + 2
     assert _equal(expr3, ref3)
+
+def test_subs_num():
+    ref = 18.901100113049495
+    x = list(map(Symbol, ['x_'+str(i) for i in range(14)]))
+    p = list(map(Symbol, ['p_'+str(i) for i in range(14)]))
+    expr = (-p[1] - 2*p[11] - 3*p[12] - 4*p[13] - p[4] + exp(x[1])
+            + 2*exp(x[11]) + 3*exp(x[12]) + 4*exp(x[13]) + exp(x[4]))
+    subsd = dict(zip(x+p, tuple(map(Number.make, [1]*28))))  # make this work without Number.make
+    val = expr.subs(subsd).evalf()
+    assert abs(val - ref) < 1e-14
