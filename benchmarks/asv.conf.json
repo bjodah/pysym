@@ -46,6 +46,7 @@
         "sympy": [],
         "symengine-python": [],
         "numpy": [],
+        "fastcache": [],
     },
 
     // The directory (relative to the current directory) that benchmarks are

@@ -9,6 +9,8 @@ import operator
 import warnings
 import weakref
 
+from fastcache import clru_cache
+
 
 def _wrap_numbers(func):
     @functools.wraps(func)
@@ -132,6 +134,7 @@ class Basic(object):
         return cls(*args)
 
     @classmethod
+    @clru_cache(maxsize=1024*1024, typed=True)
     def create(cls, args):
         return cls(*args)  # extra magic allowed
 
@@ -333,6 +336,9 @@ class Atomic(Basic):
 class Number(Atomic):
 
     _NUMBER_TYPES = (int, float)
+
+    def __hash__(self):
+        return hash(self.args[0])
 
     def is_zero(self):
         return self.args[0] == 0
