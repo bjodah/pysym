@@ -4,7 +4,7 @@ from __future__ import (absolute_import, division, print_function)
 import functools
 import operator
 
-from ..core import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp
+from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt
 
 
 def test_Symbol():
@@ -47,14 +47,14 @@ def test_Add():
 
 def test_division():
     x, y = map(Symbol, 'x y'.split())
-    assert (0/x == 0/x).evalb()
+    assert 0/x == 0/x
 
     expr = x/y
     assert abs(expr.subs({x: Number(3), y: Number(7)}).evalf() - 3/7) < 1e-15
 
-    assert (x/3 == x/3).evalb()
-    assert (3/y == 3/y).evalb()
-    assert (3/x != 3/y).evalb()
+    assert x/3 == x/3
+    assert 3/y == 3/y
+    assert 3/x != 3/y
 
 
 def test_addition_subs():
@@ -78,19 +78,19 @@ def test_is_atomic():
 
 def test_eq_evalb():
     x = Symbol('x')
-    assert (sin(x) == sin(x)).evalb() is True
-    assert (x == x).evalb() is True
-    assert (x == sin(x)).evalb() is False
+    assert (sin(x) == sin(x)) is True
+    assert (x == x) is True
+    assert (x == sin(x)) is False
 
 
 def test_diff1():
     x = Symbol('x')
     sinx = sin(x)
-    assert (sinx.diff(x) == cos(x)).evalb()
-    assert not (sinx.diff(x) == sin(x)).evalb()
+    assert sinx.diff(x) == cos(x)
+    assert not sinx.diff(x) == sin(x)
 
-    assert ((0/(1+x)).diff(x) == (0/(1+x)).diff(x)).evalb()
-    assert ((0/(1-x)).diff(x) == (0/(1-x)).diff(x)).evalb()
+    assert (0/(1+x)).diff(x) == (0/(1+x)).diff(x)
+    assert (0/(1-x)).diff(x) == (0/(1-x)).diff(x)
     f = x**0/(2 - 1*(0/x))
     dfdx = f.diff(x)
     assert dfdx.evalf() == 0
@@ -107,8 +107,8 @@ def test_subs():
 
 def test_diff2():
     x, y = map(Symbol, 'x y'.split())
-    assert (x.diff(x) == 1).evalb() is True
-    assert (y.diff(x) == 0).evalb() is True
+    assert (x.diff(x) == 1) is True
+    assert (y.diff(x) == 0) is True
 
     x5 = x*x*x*x*x
     assert abs(x5.diff(x).subs({x: Number(7)}).evalf() - 5*7**4) < 4e-12
@@ -124,7 +124,7 @@ def test_diff3():
 
 def test_diff4():
     x, y = map(Symbol, 'x y'.split())
-    assert ((3*x).diff(y) == Number(0)).evalb() is True
+    assert ((3*x).diff(y) == Number(0)) is True
 
 
 def test_repr():
@@ -141,12 +141,12 @@ def test_sorting():
     x, y = map(Symbol, 'x y'.split())
     a = Add(x, x, x, y, x, x)
     s = a.sorted()
-    assert s == Add(x, x, x, x, x, y)
+    assert s == Add.create((x, x, x, x, x, y))
 
 
 def test_collecting():
     x, y = map(Symbol, 'x y'.split())
-    a = Add(x, x, x, y, x, x)
+    a = Add.create((x, x, x, y, x, x))
     assert a == Add(Mul(Number(5), x), y)
 
 
@@ -166,7 +166,7 @@ def test_neg():
 
 def test_ITE():
     x, y = map(Symbol, 'x y'.split())
-    r = x < y
+    r = Lt(x, y)  # x < y
     x1y2 = {x: Number(1), y: Number(2)}
     x1y1 = {x: Number(1), y: Number(1)}
     x1y0 = {x: Number(1), y: Number(0)}
@@ -174,7 +174,7 @@ def test_ITE():
     assert r.subs(x1y1).evalb() is False
     assert r.subs(x1y0).evalb() is False
 
-    ite = ITE(x < y, Number(3), Number(7))
+    ite = ITE(Lt(x, y), Number(3), Number(7))
     assert abs(ite.subs(x1y2).evalf() - 3) < 1e-15
     assert abs(ite.subs(x1y0).evalf() - 7) < 1e-15
 
@@ -189,7 +189,7 @@ def test_subs_multi():
 
 
 def _equal(expr1, expr2):
-    return (expr1.sorted() == expr2.sorted()).evalb() is True
+    return (expr1.sorted() == expr2.sorted()) is True
 
 
 def test_denest():

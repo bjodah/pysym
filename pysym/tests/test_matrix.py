@@ -13,11 +13,11 @@ def test_jacobian():
 
     def check(mat):
         assert mat.shape == (2, 2)
-        assert (mat[0, 0] == Number(3)).evalb() is True
-        assert (mat[0, 1] == Number(0)).evalb() is True
-        assert (mat[1, 0] == 2*y).evalb() is True
-        assert (mat[1, 1] == 2*x + 3).evalb() is True
-        assert (mat[1, 1] == 2*x + 2).evalb() is False
+        assert (mat[0, 0] == Number(3)) is True
+        assert (mat[0, 1] == Number(0)) is True
+        assert (mat[1, 0] == 2*y) is True
+        assert (mat[1, 1] == 2*x + 3) is True
+        assert (mat[1, 1] == 2*x + 2) is False
 
     check(Matrix(1, 2, exprs).jacobian(symbols))
     check(Matrix(2, 1, exprs).jacobian(symbols))

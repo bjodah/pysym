@@ -11,12 +11,14 @@ import os
 if os.environ.get('PYSYM_USE_NATIVE', '0') == '1':
     from ._pysym import (
         Symbol, Number, ITE, gamma, abs, exp, log, sin, cos, tan, asin, acos, atan,
-        Vector, Matrix, sqrt, _wrap_numbers
+        Vector, Matrix, sqrt, _wrap_numbers, Add, Mul,
+        Lt, Le, Eq, Ne, Gt, Ge
     )
 else:
     from .core import (
         Symbol, Number, ITE, gamma, abs, exp, log, sin, cos, tan, asin, acos, atan,
-        Vector, Matrix, sqrt, _wrap_numbers
+        Vector, Matrix, sqrt, _wrap_numbers, Add, Mul,
+        Lt, Le, Eq, Ne, Gt, Ge
     )
 
 from .util import lambdify, Lambdify, symbols, symarray

@@ -32,43 +32,11 @@ class _deprecated(object):
         return f
 
 
-@functools.total_ordering
-class BasicComparator(object):
-    def __init__(self, obj):
-        self.obj = obj
-
-    def __lt__(self, other):
-        typ1, typ2 = type(self.obj), type(other.obj)
-        if typ1 is typ2:
-            if self.obj.is_atomic():
-                return self.obj.args[0] < other.obj.args[0]
-            else:
-                for a1, a2 in zip(self.obj.args, other.obj.args):
-                    if BasicComparator(a1) < BasicComparator(a2):
-                        return True
-                return False
-        else:
-            return typ1.__name__ < typ2.__name__
-
-    def __eq__(self, other):
-        typ1, typ2 = type(self.obj), type(other.obj)
-        if typ1 is typ2:
-            if self.obj.is_atomic():
-                return self.obj.args[0] == other.obj.args[0]
-            else:
-                for a1, a2 in zip(self.obj.args, other.obj.args):
-                    if not BasicComparator(a1) == BasicComparator(a2):
-                        return False
-                return True
-        else:
-            return False
-
-
-def _collect(args, collect_to, drop=(), merge=None):
+def sort_collect_drop_merge(args, collect_to, drop=(), merge=None):
     count = 0
     previous = None
     new_args = []
-    for arg in sorted(args, key=BasicComparator):
+    for arg in sorted(args):
         if arg.found_in(drop):
             continue
         if count > 0:
@@ -97,7 +65,7 @@ def _collect(args, collect_to, drop=(), merge=None):
     return tuple(new_args)
 
 
-def _associative(Cls, lhs, rhs, collect_to=None, drop=()):
+def create_associative(Cls, lhs, rhs, collect_to=None, drop=(), merge=None):
     lhs_cls = isinstance(lhs, Cls)
     rhs_cls = isinstance(rhs, Cls)
     if not lhs_cls and not rhs_cls:
@@ -110,11 +78,12 @@ def _associative(Cls, lhs, rhs, collect_to=None, drop=()):
         elif isinstance(rhs, Cls):
             args = rhs.args + (lhs,)
         if collect_to is not None:
-            args = _collect(args, collect_to, drop)
+            args = sort_collect_drop_merge(args, collect_to, drop, merge)
 
     return Cls.create(args)
 
 
+@functools.total_ordering
 class Basic(object):
 
     __slots__ = ('args',)
@@ -136,6 +105,35 @@ class Basic(object):
     def __hash__(self):
         return hash(self.args)
 
+    def __lt__(self, other):
+        other = Number.make(other)
+        typ1, typ2 = type(self), type(other)
+        if typ1 is typ2:
+            if self.is_atomic():
+                return self.args[0] < other.args[0]
+            else:
+                for a1, a2 in zip(self.args, other.args):
+                    if a1 < a2:
+                        return True
+                return False
+        else:
+            return typ1.__name__ < typ2.__name__
+
+    def __eq__(self, other):
+        other = Number.make(other)
+        typ1, typ2 = type(self), type(other)
+        if typ1 is typ2:
+            if self.is_atomic():
+                return self.args[0] == other.args[0]
+            else:
+                for a1, a2 in zip(self.args, other.args):
+                    if not a1 == a2:
+                        return False
+                return True
+        else:
+            return False
+
+
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(
             repr(arg) for arg in self.args))
@@ -150,9 +148,8 @@ class Basic(object):
         return False
 
     def found_in(self, flat_iterable):
-        sort_key = BasicComparator(self)
-        for elem_key in map(BasicComparator, flat_iterable):
-            if sort_key == elem_key:
+        for elem_key in flat_iterable:
+            if self == elem_key:
                 return True
         return False
 
@@ -179,14 +176,14 @@ class Basic(object):
 
     @_wrap_numbers
     def __add__(self, other):
-        return _associative(Add, self, other, Mul, (Zero, Mul(Zero)))
+        return create_associative(Add, self, other, Mul, (Zero, Mul(Zero)), Add)
 
     def __radd__(self, other):
         return self+other
 
     @_wrap_numbers
     def __mul__(self, other):
-        return _associative(Mul, self, other, Pow, (One,))
+        return create_associative(Mul, self, other, Pow, (One,))
 
     def __rmul__(self, other):
         return self*other
@@ -223,29 +220,29 @@ class Basic(object):
     def __neg__(self):
         return -One * self
 
-    @_wrap_numbers
-    def __eq__(self, other):
-        return Eq(self, other)
+    # @_wrap_numbers
+    # def __eq__(self, other):
+    #     return Eq(self, other)
 
-    @_wrap_numbers
-    def __ne__(self, other):
-        return Ne(self, other)
+    # @_wrap_numbers
+    # def __ne__(self, other):
+    #     return Ne(self, other)
 
-    @_wrap_numbers
-    def __lt__(self, other):
-        return Lt(self, other)
+    # @_wrap_numbers
+    # def __lt__(self, other):
+    #     return Lt(self, other)
 
-    @_wrap_numbers
-    def __le__(self, other):
-        return Le(self, other)
+    # @_wrap_numbers
+    # def __le__(self, other):
+    #     return Le(self, other)
 
-    @_wrap_numbers
-    def __gt__(self, other):
-        return Gt(self, other)
+    # @_wrap_numbers
+    # def __gt__(self, other):
+    #     return Gt(self, other)
 
-    @_wrap_numbers
-    def __ge__(self, other):
-        return Ge(self, other)
+    # @_wrap_numbers
+    # def __ge__(self, other):
+    #     return Ge(self, other)
 
 
 class Relational(Basic):
@@ -253,7 +250,7 @@ class Relational(Basic):
     _rel_op_str = None
 
     def evalb(self):
-        return self._rel_op(*map(BasicComparator, self.args))
+        return self._rel_op(*self.args)
 
     def __str__(self):
         return self._rel_op_str % self.args
@@ -358,12 +355,6 @@ class Number(Atomic):
     def __neg__(self):
         return Number(-self.args[0])
 
-    @_wrap_numbers
-    def __eq__(self, other):
-        if isinstance(other, (int, float)):
-            return self.args[0] == other
-        return super(Number, self).__eq__(other)
-
     def __str__(self):
         return str(self.args[0])
 
@@ -406,7 +397,7 @@ class Operator(Basic):
 
     def sorted(self):
         if self._commutative:
-            return self.create(sorted(self.args, key=BasicComparator))
+            return self.create(sorted(self.args))
         else:
             return self
 
@@ -444,7 +435,7 @@ class Add(Reduction):
             return Zero
         else:
             return super(Add, cls).create(
-                _collect(args, Mul, (Zero, Mul(Zero)), Add))
+                sort_collect_drop_merge(args, Mul, (Zero, Mul(Zero)), Add))
 
     def diff(self, wrt):
         return self.create(tuple(arg.diff(wrt) for arg in self.args))
@@ -474,7 +465,7 @@ class Mul(Reduction):
                 return Zero
             else:
                 return super(Mul, cls).create(
-                    _collect(args, Pow, (One,), Mul))
+                    sort_collect_drop_merge(args, Pow, (One,), Mul))
 
     def diff(self, wrt):
         return Add.create(tuple(
@@ -514,7 +505,7 @@ class Sub(Binary):
             return -b
         if b.is_zero():
             return a
-        if (a == b).evalb():
+        if a == b:
             return Zero
         return cls(*args)
 
