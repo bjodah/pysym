@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, division, print_function)
-from .core import _wrap_numbers, Symbol, Number, Matrix
+from . import _wrap_numbers, Symbol, Number, Matrix
 
 
 def symbols(s):

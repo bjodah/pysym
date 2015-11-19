@@ -15,3 +15,6 @@ benchmarks/*
 !benchmarks/benchmarks
 !benchmarks/profile.py
 !benchmarks/run_profile.sh
+**.so
+_*.c
+cython_debug/

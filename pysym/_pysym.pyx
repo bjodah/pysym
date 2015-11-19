@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import (absolute_import, division, print_function)
+from cpython cimport bool
 
 import functools
 import itertools
@@ -8,8 +6,6 @@ import math
 import operator
 import warnings
 import weakref
-
-# from fastcache import clru_cache
 
 
 def _wrap_numbers(func):
@@ -30,39 +26,6 @@ class _deprecated(object):
             warnings.warn('Deprecation warning: ' + self.msg)
             return func(*args, **kwargs)
         return f
-
-
-@functools.total_ordering
-class BasicComparator(object):
-    def __init__(self, obj):
-        self.obj = obj
-
-    def __lt__(self, other):
-        typ1, typ2 = type(self.obj), type(other.obj)
-        if typ1 is typ2:
-            if self.obj.is_atomic():
-                return self.obj.args[0] < other.obj.args[0]
-            else:
-                for a1, a2 in zip(self.obj.args, other.obj.args):
-                    if BasicComparator(a1) < BasicComparator(a2):
-                        return True
-                return False
-        else:
-            return typ1.__name__ < typ2.__name__
-
-    def __eq__(self, other):
-        typ1, typ2 = type(self.obj), type(other.obj)
-        if typ1 is typ2:
-            if self.obj.is_atomic():
-                return self.obj.args[0] == other.obj.args[0]
-            else:
-                for a1, a2 in zip(self.obj.args, other.obj.args):
-                    if not BasicComparator(a1) == BasicComparator(a2):
-                        return False
-                return True
-        else:
-            return False
-
 
 def _collect(args, collect_to, drop=(), merge=None):
     count = 0
@@ -101,7 +64,7 @@ def _associative(Cls, lhs, rhs, collect_to=None, drop=()):
     lhs_cls = isinstance(lhs, Cls)
     rhs_cls = isinstance(rhs, Cls)
     if not lhs_cls and not rhs_cls:
-        args = lhs, rhs
+        args = Number.make(lhs), Number.make(rhs)
     else:
         if lhs_cls and rhs_cls:
             args = lhs.args + rhs.args
@@ -115,56 +78,135 @@ def _associative(Cls, lhs, rhs, collect_to=None, drop=()):
     return Cls.create(args)
 
 
-class Basic(object):
+cdef class BasicComparator:
+    cdef public object obj
 
-    __slots__ = ('args',)
+    def __cinit__(self, obj):
+        self.obj = Number.make(obj)
 
-    def is_atomic(self):
-        return False
+    def __richcmp__(self, other, int op):
+        typ1, typ2 = type(self), type(other)
+        if op == 0:  # <
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] < other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) < BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name < typ2.class_name
+        elif op == 1:  # <=
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] <= other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) <= BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name <= typ2.class_name
+        elif op == 2:  # ==
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] == other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) == BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name == typ2.class_name
+        elif op == 3:  # !=
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] != other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) != BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name != typ2.class_name
+        elif op == 4:  # >
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] > other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) > BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name > typ2.class_name
+        elif op == 5:  # >=
+            if typ1 is typ2:
+                if self.obj.is_atomic():
+                    return self.obj.args[0] >= other.obj.args[0]
+                else:
+                    for a1, a2 in zip(self.obj.args, other.obj.args):
+                        if BasicComparator(a1) >= BasicComparator(a2):
+                            return True
+                    return False
+            else:
+                return typ1.class_name >= typ2.class_name
 
-    def is_zero(self):
-        return False
 
-    def __init__(self, *args):
+cdef create(int typ, tuple args):
+    if typ == 0:
+        return _Basic(*args)
+
+
+cdef class _Basic:
+    cdef readonly tuple args
+    cdef int class_typ_id
+    cdef str class_name
+
+    def __cinit__(self, *args):
+        self.class_typ_id = 0
+        self.class_name = 'Basic'
         self.args = args
 
-    @classmethod
-    # @clru_cache(maxsize=1024*1024, typed=True)
-    def create(cls, args):
-        return cls(*args)  # extra magic allowed
+    cpdef bool is_zero(self):
+        return False
+
+    cpdef bool is_atomic(self):
+        return False
 
     def __hash__(self):
         return hash(self.args)
 
     def __repr__(self):
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(
+        return '%s(%s)' % (self.class_name, ', '.join(
             repr(arg) for arg in self.args))
 
     def _print_ccode(self):
         return str(self)
 
-    def has(self, instance):
+    cpdef bool has(self, instance):
         for arg in self.args:
             if arg.has(instance):
                 return True
         return False
 
-    def found_in(self, flat_iterable):
+    cpdef bool found_in(self, flat_iterable):
         sort_key = BasicComparator(self)
         for elem_key in map(BasicComparator, flat_iterable):
             if sort_key == elem_key:
                 return True
         return False
 
-    def _subs(self, symb, repl):
+    cpdef object _subs(self, symb, repl):
         if self.has(symb):
             if symb is self:
                 raise ValueError("Impossible, bug!")
             else:
-                return self.create(tuple(
+                return self.create(tuple([
                     repl if arg is symb else arg._subs(symb, repl)
                     for arg in self.args
-                ))
+                ]))
         else:
             return self
 
@@ -175,46 +217,46 @@ class Basic(object):
         return result
 
     def expand(self):
-        return self.create(tuple(arg.expand() for arg in self.args))
+        return create(self.class_typ_id, tuple(arg.expand() for arg in self.args))
 
-    @_wrap_numbers
     def __add__(self, other):
+        other = Number.make(other)
         return _associative(Add, self, other, Mul, (Zero, Mul(Zero)))
 
     def __radd__(self, other):
         return self+other
 
-    @_wrap_numbers
     def __mul__(self, other):
+        other = Number.make(other)
         return _associative(Mul, self, other, Pow, (One,))
 
-    def __rmul__(self, other):
+    def __rmul__(other, self):
         return self*other
 
-    @_wrap_numbers
-    def __pow__(base, exponent):
+    def __pow__(base, exponent, modulo):
+        exponent = Number.make(exponent)
         return Pow.create((base, exponent))
 
-    @_wrap_numbers
     def __truediv__(num, denom):
+        denom = Number.make(denom)
         return Fraction.create((num, denom))
 
-    @_wrap_numbers
     def __rtruediv__(denom, num):
+        denom = Number.make(denom)
         return Fraction.create((num, denom))
 
-    @_deprecated('Use "from __future__ import division"')
-    @_wrap_numbers
     def __div__(num, denom):
+        warnings.warn('Deprecated: Use "from __future__ import division"')
+        denom = Number.make(denom)
         return Fraction.create((num, denom))
 
-    @_deprecated('Use "from __future__ import division"')
-    @_wrap_numbers
     def __rdiv__(denom, num):
+        warnings.warn('Deprecated: Use "from __future__ import division"')
+        denom = Number.make(denom)
         return Fraction.create((num, denom))
 
-    @_wrap_numbers
     def __sub__(self, other):
+        other = Number.make(other)
         return Sub.create((self, other))
 
     def __rsub__(self, other):
@@ -223,29 +265,31 @@ class Basic(object):
     def __neg__(self):
         return -One * self
 
-    @_wrap_numbers
-    def __eq__(self, other):
-        return Eq(self, other)
+    def __richcmp__(self, other_, int op):
+        other = Number.make(other_)
+        if op == 0:  # <
+            return Lt(self, other)
+        elif op == 1:  # <=
+            return Le(self, other)
+        elif op == 2:  # ==
+            return Eq(self, other)
+        elif op == 3:  # !=
+            return Ne(self, other)
+        elif op == 4:  # >
+            return Gt(self, other)
+        elif op == 5:  # >=
+            return Ge(self, other)
 
-    @_wrap_numbers
-    def __ne__(self, other):
-        return Ne(self, other)
 
-    @_wrap_numbers
-    def __lt__(self, other):
-        return Lt(self, other)
+class Basic(_Basic):
 
-    @_wrap_numbers
-    def __le__(self, other):
-        return Le(self, other)
+    @classmethod
+    def from_args(cls, args):
+        return cls(*args)
 
-    @_wrap_numbers
-    def __gt__(self, other):
-        return Gt(self, other)
-
-    @_wrap_numbers
-    def __ge__(self, other):
-        return Ge(self, other)
+    @classmethod
+    def create(cls, args):
+        return cls(*args)  # extra magic allowed
 
 
 class Relational(Basic):
@@ -299,16 +343,16 @@ class Atomic(Basic):
     __all_instances = weakref.WeakValueDictionary()
     __slots__ = ('args', '__all_Atomic_instances',)
 
-    def is_atomic(self):
-        return True
-
     def __new__(cls, arg):
         instance = Atomic.__all_instances.get(arg, None)
         if instance is None:
-            instance = object.__new__(cls)
+            instance = _Basic.__new__(cls)
             instance.args = (arg,)
             Atomic.__all_instances[arg] = instance
         return instance
+
+    def is_atomic(self):
+        return True
 
     def has(self, instance):
         if instance is self:
@@ -613,9 +657,9 @@ class Function(Basic):
 
 class Function1(Function):
 
-    @_wrap_numbers
-    def __init__(self, arg):
-        self.args = (arg,)
+    # @_wrap_numbers
+    # def __init__(self, arg):
+    #     super(Function1, self).__init__(arg)
 
     @staticmethod
     def _deriv(arg):

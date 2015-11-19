@@ -72,8 +72,8 @@ def test_subtraction():
 
 def test_is_atomic():
     x = Symbol('x')
-    assert x.is_atomic
-    assert not sin(x).is_atomic
+    assert x.is_atomic()
+    assert not sin(x).is_atomic()
 
 
 def test_eq_evalb():
@@ -214,12 +214,14 @@ def test_expand():
     ref3 = x**2 * y**2 + x**2 * y + x**2 * 2 + y**2 + y + 2
     assert _equal(expr3, ref3)
 
+
 def test_subs_num():
     ref = 18.901100113049495
     x = list(map(Symbol, ['x_'+str(i) for i in range(14)]))
     p = list(map(Symbol, ['p_'+str(i) for i in range(14)]))
-    expr = (-p[1] - 2*p[11] - 3*p[12] - 4*p[13] - p[4] + exp(x[1])
-            + 2*exp(x[11]) + 3*exp(x[12]) + 4*exp(x[13]) + exp(x[4]))
-    subsd = dict(zip(x+p, tuple(map(Number.make, [1]*28))))  # make this work without Number.make
+    expr = (-p[1] - 2*p[11] - 3*p[12] - 4*p[13] - p[4] + exp(x[1]) +
+            2*exp(x[11]) + 3*exp(x[12]) + 4*exp(x[13]) + exp(x[4]))
+    # make this work without Number.make:
+    subsd = dict(zip(x+p, tuple(map(Number.make, [1]*28))))
     val = expr.subs(subsd).evalf()
     assert abs(val - ref) < 1e-14
