@@ -10,7 +10,16 @@ import os
 
 
 if os.environ.get('PYSYM_USE_NATIVE', '0') == '1':
+    # Will eventually provide a faster alternative
     from ._pysym import (
+        Symbol, Number, ITE, gamma, abs, exp, log,
+        sin, cos, tan, asin, acos, atan,
+        Vector, Matrix, sqrt, _wrap_numbers, Add, Mul,
+        Lt, Le, Eq, Ne, Gt, Ge
+    )
+elif os.environ.get('PYSYM_USE_SYMPY', '0') == '1':
+    # For debugging purposes only
+    from sympy import (
         Symbol, Number, ITE, gamma, abs, exp, log,
         sin, cos, tan, asin, acos, atan,
         Vector, Matrix, sqrt, _wrap_numbers, Add, Mul,

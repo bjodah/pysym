@@ -264,7 +264,7 @@ class Relational(Basic):
 
 class Eq(Relational):
     _rel_op = operator.__eq__
-    _rel_op_str = '(%s != %s)'
+    _rel_op_str = '(%s == %s)'
 
 
 class Ne(Relational):
@@ -294,7 +294,7 @@ class Ge(Relational):
 
 class Not(Relational):
     _rel_op = operator.__not__
-    _rel_op_str = '(!%s)'
+    _rel_op_str = '(not %s)'
 
 
 class Atomic(Basic):
@@ -488,9 +488,10 @@ class Mul(Reduction):
                     return arg.insert_mult(Mul.create(
                         self.args[idx+1:])).expand()
                 if idx > 0:  # absorb into first Add
-                    return Mul.create((
-                        arg.insert_mult(Mul.create(self.args[:idx]))),
-                        + self.args[idx + 1:]).expand()
+                    summation = arg.insert_mult(Mul.create(self.args[:idx]))
+                    return Mul.create(
+                        (summation,) + self.args[idx + 1:]
+                    ).expand()
         return self
 
 

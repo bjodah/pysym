@@ -7,6 +7,13 @@ import operator
 from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt
 
 
+def test_has():
+    x, y = map(Symbol, 'x y'.split())
+    summation = (x+1)
+    assert summation.has(x)
+    assert not summation.has(y)
+
+
 def test_Symbol():
     s1 = Symbol('s')
     s2 = Symbol('s')
@@ -47,7 +54,9 @@ def test_Add():
 
 def test_division():
     x, y = map(Symbol, 'x y'.split())
-    assert 0/x == 0/x
+    zero_over_x_1 = 0/x
+    zero_over_x_2 = 0/x
+    assert zero_over_x_1 == zero_over_x_2
 
     expr = x/y
     assert abs(expr.subs({x: Number(3), y: Number(7)}).evalf() - 3/7) < 1e-15
@@ -95,8 +104,12 @@ def test_diff1():
     dfdx = f.diff(x)
     assert dfdx.evalf() == 0
 
+def test_subs1():
+    x, y = map(Symbol, 'x y'.split())
+    assert abs((x/y).subs({x: Number(7), y: Number(3)}).evalf() - 7./3) < 1e-15
 
-def test_subs():
+
+def test_subs2():
     x, y = map(Symbol, 'x y'.split())
 
     x_plus_y = x + y

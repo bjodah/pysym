@@ -58,8 +58,14 @@ def merge(args, mrg_cls=None):
     else:
         return new_args
 
+def _evalf(args):
+    return tuple(arg if isinstance(arg, Number._NUMBER_TYPES)
+                 else arg.evalf() for arg in args)
+
 
 def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
+    merged = merge(args, mrg_cls)
+    for x in merged:
     return collect(
         sorted(filter(
             lambda x: not x.found_in(drop),
@@ -67,104 +73,24 @@ def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
         )), collect_to)
 
 
-cdef class BasicComparator:
-    cdef public object obj
-
-    def __cinit__(self, obj):
-        self.obj = Number.make(obj)
-
-    def __richcmp__(self, other, int op):
-        if not isinstance(other, BasicComparator):
-            return self.__richcmp__(BasicComparator(other), op)
-        typ1, typ2 = type(self.obj), type(other.obj)
-        if op == 0:  # <
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] < other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) < BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ < typ2.__class__.__name__
-        elif op == 1:  # <=
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] <= other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) <= BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ <= typ2.__class__.__name__
-        elif op == 2:  # ==
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] == other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) == BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ == typ2.__class__.__name__
-        elif op == 3:  # !=
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] != other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) != BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ != typ2.__class__.__name__
-        elif op == 4:  # >
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] > other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) > BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ > typ2.__class__.__name__
-        elif op == 5:  # >=
-            if typ1 is typ2:
-                if self.obj.is_atomic():
-                    return self.obj.args[0] >= other.obj.args[0]
-                else:
-                    for a1, a2 in zip(self.obj.args, other.obj.args):
-                        if BasicComparator(a1) >= BasicComparator(a2):
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ >= typ2.__class__.__name__
-
-
-# cdef create(int typ, tuple args):
-#     if typ == 0:
-#         return _Basic(*args)
-
-
 cdef class _Basic:
     cdef int _hash
-    cdef readonly tuple args
-    # cdef int class_typ_id
-    # cdef str class_name
+    cdef readonly tuple _args
+
+    property args:
+        def __get__(self):
+            return self._args[2:]
 
     def __cinit__(self, *args):
-        # self.class_typ_id = 0
-        # self.class_name = 'Basic'
-        self.args = args
+        self._args = args
         self._hash = -1
+
+    def create(self, args):
+        return self._args[0].create(args)  # extra magic allowed
 
     cdef int args_hash(self):
         cdef int val = 0
-        for arg in self.args:
+        for arg in self._args:
             val += hash(arg)
         return val
 
@@ -177,36 +103,56 @@ cdef class _Basic:
         return False
 
     cpdef bool is_atomic(self):
-        return False
+        return self._args[1]
 
     def __repr__(self):
-        print('self.args', self.args)
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(
+        return '%s(%s)' % (self._args[0], ', '.join(
             repr(arg) for arg in self.args))
 
-    def _print_ccode(self):
-        return str(self)
+    def evalf(self):
+        if self.is_atomic():
+            return float(self.args[0])
+
+    def diff(self, wrt):
+        if self.is_atomic():
+            if self._args[0] is Symbol:
+                if wrt == self:
+                    return One
+                else:
+                    return Zero
+            return Zero
+        return self._args[0].create(self.args).diff(wrt)
 
     cpdef bool has(self, instance):
+        if not isinstance(instance, _Basic):
+            instance = instance._obj
+        if self.is_atomic():
+            if instance is self:
+                return True
+            else:
+                return False
+
         for arg in self.args:
             if arg.has(instance):
                 return True
         return False
 
     cpdef bool found_in(self, flat_iterable):
-        sort_key = BasicComparator(self)
-        for elem_key in map(BasicComparator, flat_iterable):
-            if sort_key == elem_key:
+        for elem_key in flat_iterable:
+            if self == elem_key:
                 return True
         return False
 
     cpdef object _subs(self, symb, repl):
+        if self.is_atomic():
+            return repl if self == symb else self
+
         if self.has(symb):
             if symb is self:
                 raise ValueError("Impossible, bug!")
             else:
                 return self.create(tuple([
-                    repl if arg is symb else arg._subs(symb, repl)
+                    repl if arg == symb else arg._subs(symb, repl)
                     for arg in self.args
                 ]))
         else:
@@ -219,11 +165,12 @@ cdef class _Basic:
         return result
 
     def expand(self):
+        if self.is_atomic():
+            return self
         return self.create(tuple(arg.expand() for arg in self.args))
 
     def __add__(self, other):
-        other = Number.make(other)
-        return Add.create((self, other))
+        return Add.create((Number.make(self), Number.make(other)))
 
     def __radd__(self, other):
         return self+other
@@ -262,8 +209,7 @@ cdef class _Basic:
         return Fraction.create((num, denom))
 
     def __sub__(self, other):
-        other = Number.make(other)
-        return Sub.create((self, other))
+        return Sub.create((Number.make(self), Number.make(other)))
 
     def __rsub__(self, other):
         return self - other
@@ -272,77 +218,72 @@ cdef class _Basic:
         return -One * self
 
     def __richcmp__(self, other_, int op):
-        other = Number.make(other_)
-        typ1, typ2 = type(self), type(other)
-        if op == 0:  # <
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] < other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 < a2:
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ < typ2.__class__.__name__
-        elif op == 1:  # <=
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] <= other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 <= a2:
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ <= typ2.__class__.__name__
-        elif op == 2:  # ==
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] == other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 == a2:
-                            return True
-                    return False
-            else:
-                return False
-        elif op == 3:  # !=
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] != other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 != a2:
-                            return True
-                    return False
-            else:
-                return True
-        elif op == 4:  # >
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] > other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 > a2:
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ > typ2.__class__.__name__
-        elif op == 5:  # >=
-            if typ1 is typ2:
-                if self.is_atomic():
-                    return self.args[0] >= other.args[0]
-                else:
-                    for a1, a2 in zip(self.args, other.args):
-                        if a1 >= a2:
-                            return True
-                    return False
-            else:
-                return typ1.__class__.__name__ >= typ2.__class__.__name__
+        cmp1 = self._args
+        if isinstance(other_, _Basic):
+            cmp2 = other_._args
+        else:
+            try:
+                cmp2 = other_._obj._args
+            except:
+                cmp2 = Number.make(other_)._obj._args
+
+        if op == 0:
+            return cmp1 < cmp2
+        elif op == 1:
+            return cmp1 < cmp2
+        elif op == 2:
+            return cmp1 == cmp2
+        elif op == 3:
+            return cmp1 != cmp2
+        elif op == 4:
+            return cmp1 >= cmp2
+        elif op == 5:
+            return cmp1 > cmp2
 
 
-class Basic(_Basic):
+class Basic(object):
+
+    def __new__(cls, *args, atomic=False):
+        instance = object.__new__(cls)
+        _obj = _Basic(cls, atomic, *args)
+        instance._obj = _obj
+        instance.args = _obj.args
+        return instance
+
+    def __hash__(self): return hash(self._obj)
+    def is_zero(self): return self._obj.is_zero()
+    def is_atomic(self): return self._obj.is_atomic()
+
+    def has(self, instance): return self._obj.has(instance)
+    def found_in(self, flat_iterable): return self._obj.found_in(flat_iterable)
+    def _subs(self, symb, repl): return self._obj._subs(symb, repl)
+    def subs(self, subs_dict): return self._obj.subs(subs_dict)
+    def expand(self): return self._obj.expand()
+    def diff(self, wrt): return self._obj.diff(wrt)
+    def __add__(self, other): return self._obj.__add__(other)
+    def __radd__(self, other): return self._obj.__radd__(other)
+    def __mul__(self, other): return self._obj.__mul__(other)
+    def __rmul__(self, other): return self._obj.__rmul__(other)
+    def __pow__(base, exponent): return base._obj.__pow__(exponent)
+    def __truediv__(num, denom): return num._obj.__truediv__(denom)
+    def __rtruediv__(denom, num): return denom._obj.__rtruediv__(num)
+    def __div__(num, denom): return num._obj.__div__(denom)
+    def __rdiv__(denom, num): return denom._obj.__rdiv__(num)
+    def __sub__(self, other): return self._obj.__sub__(other)
+    def __rsub__(self, other): return self._obj.__rsub__(other)
+    def __neg__(self): return self._obj.__neg__()
+    def _print_ccode(self): return self._obj._print_ccode()
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(
+            repr(arg) for arg in self.args))
+
+    def __lt__(self, other): return self._obj < other
+    def __le__(self, other): return self._obj <= other
+    def __eq__(self, other): return self._obj == other
+    def __ne__(self, other): return self._obj != other
+    def __gt__(self, other): return self._obj > other
+    def __ge__(self, other): return self._obj >= other
+
 
     @classmethod
     def from_args(cls, args):
@@ -358,7 +299,7 @@ class Relational(Basic):
     _rel_op_str = None
 
     def evalb(self):
-        return self._rel_op(*map(BasicComparator, self.args))
+        return self._rel_op(*self.args)
 
     def __str__(self):
         return self._rel_op_str % self.args
@@ -366,7 +307,7 @@ class Relational(Basic):
 
 class Eq(Relational):
     _rel_op = operator.__eq__
-    _rel_op_str = '(%s != %s)'
+    _rel_op_str = '(%s == %s)'
 
 
 class Ne(Relational):
@@ -396,39 +337,25 @@ class Ge(Relational):
 
 class Not(Relational):
     _rel_op = operator.__not__
-    _rel_op_str = '(!%s)'
+    _rel_op_str = '(not %s)'
 
 
 class Atomic(Basic):
 
     __all_instances = weakref.WeakValueDictionary()
-    #__slots__ = ('args', '__all_Atomic_instances',)
 
     def __new__(cls, arg):
         instance = Atomic.__all_instances.get(arg, None)
         if instance is None:
-            instance = Basic.__new__(cls, arg)
+            instance = Basic.__new__(cls, arg, atomic=True)
             Atomic.__all_instances[arg] = instance
         return instance
-
-    def is_atomic(self):
-        return True
-
-    def has(self, instance):
-        if instance is self:
-            return True
 
     def found_in(self, flat_iterable):
         for elem in flat_iterable:
             if elem is self:
                 return True
         return False
-
-    def _subs(self, symb, repl):
-        return repl if self is symb else self
-
-    def expand(self):
-        return self
 
 
 class Number(Atomic):
@@ -449,9 +376,6 @@ class Number(Atomic):
             return cls(arg)
         return arg
 
-    def diff(self, wrt):
-        return Zero
-
     def evalf(self):
         arg = self.args[0]
         if isinstance(arg, self._NUMBER_TYPES):
@@ -471,12 +395,6 @@ class Number(Atomic):
 
 class Symbol(Atomic):
 
-    def diff(self, instance):
-        if instance is self:
-            return One
-        else:
-            return Zero
-
     def __str__(self):
         return str(self.args[0])
 
@@ -493,7 +411,7 @@ class Operator(Basic):
     _commutative = True
 
     def evalf(self):
-        return self._operator(*tuple(arg.evalf() for arg in self.args))
+        return self._operator(*_evalf(self.args))
 
     def __str__(self):
         return self._op_str % self.args
@@ -504,7 +422,7 @@ class Operator(Basic):
 
     def sorted(self):
         if self._commutative:
-            return self.create(sorted(self.args, key=BasicComparator))
+            return self.create(sorted(self.args))
         else:
             return self
 
@@ -519,8 +437,7 @@ class Reduction(Operator):
             return super(Reduction, cls).create(args)
 
     def evalf(self):
-        return functools.reduce(self._operator, (
-            arg.evalf() for arg in self.args))
+        return functools.reduce(self._operator, _evalf(self.args))
 
     def __str__(self):
         return '(' + self._op_str.join(map(str, self.args)) + ')'
@@ -591,9 +508,10 @@ class Mul(Reduction):
                     return arg.insert_mult(Mul.create(
                         self.args[idx+1:])).expand()
                 if idx > 0:  # absorb into first Add
-                    return Mul.create((
-                        arg.insert_mult(Mul.create(self.args[:idx]))),
-                        + self.args[idx + 1:]).expand()
+                    summation = arg.insert_mult(Mul.create(self.args[:idx]))
+                    return Mul.create(
+                        (summation,) + self.args[idx + 1:]
+                    ).expand()
         return self
 
 
@@ -631,6 +549,8 @@ class Fraction(Binary):
     @classmethod
     def create(cls, args):
         instance = cls(*args)
+        print(args)
+        print(instance.args)
         if instance.args[1].is_zero():
             raise ZeroDivisionError
         else:
@@ -640,7 +560,7 @@ class Fraction(Binary):
                 return instance
 
     def evalf(self):
-        return self.args[0].evalf() / self.args[1].evalf()
+        return float(self.args[0].evalf()) / float(self.args[1].evalf())
 
     def diff(self, wrt):
         a, b = self.args  # a/b
@@ -651,7 +571,6 @@ class Fraction(Binary):
             )),
             Pow.create((b, Two))
         ))
-        # return (self.args[0] * self.args[1]**-One).diff(wrt)
 
 
 class Pow(Binary):
@@ -705,7 +624,7 @@ class Function(Basic):
     _func_str = None
 
     def evalf(self):
-        return self._function(*tuple(arg.evalf() for arg in self.args))
+        return self._function(*_evalf(self.args))
 
     def __str__(self):
         return (self._func_str or str(self._function)) + '(' + ', '.join(
@@ -713,10 +632,6 @@ class Function(Basic):
 
 
 class Function1(Function):
-
-    # def __init__(self, arg):
-    #     super(Binary, self).__init__(arg)
-
 
     @staticmethod
     def _deriv(arg):
@@ -825,9 +740,6 @@ class atan(Function1):
 
 class Vector(Basic):
 
-    # def __init__(self, *args):
-    #     self.args = args
-
     def __len__(self):
         return len(self.args)
 
@@ -852,13 +764,13 @@ class Matrix(Basic):
                     return source[ri, ci]
                 except TypeError:
                     return source[ri*ncols + ci]
-        super(Matrix, self).__init__(
-            nrows, ncols, *tuple([
-                callback(ri, ci) for ri, ci in itertools.product(
-                    range(nrows),
-                    range(ncols))
-            ])
-        )
+        elements = tuple([
+            callback(ri, ci) for ri, ci in itertools.product(
+                range(nrows),
+                range(ncols))
+        ])
+        print(nrows, ncols, len(elements), type(elements), elements)
+        super(Matrix, self).__init__(nrows, ncols *elements)
 
     def _subs(self, symb, repl):
         return self.__class__(self.nrows, self.ncols,
