@@ -11,4 +11,10 @@ examples/*.html
 examples/thumbs/
 pysym.egg-info
 benchmarks/*
+!benchmarks/asv.conf.json
 !benchmarks/benchmarks
+!benchmarks/profile.py
+!benchmarks/run_profile.sh
+**.so
+_*.c
+cython_debug/

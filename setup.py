@@ -3,12 +3,31 @@
 
 import os
 import shutil
-from setuptools import setup
+import sys
+from setuptools import setup, Extension
 
 
 pkg_name = 'pysym'
 
 PYSYM_RELEASE_VERSION = os.environ.get('PYSYM_RELEASE_VERSION', '')  # v*
+
+# Cythonize .pyx file if it exists (not in source distribution)
+ext_modules = []
+
+if len(sys.argv) > 1 and '--help' not in sys.argv[1:] and sys.argv[1] not in (
+        '--help-commands', 'egg_info', 'clean', '--version'):
+    USE_CYTHON = os.path.exists('pysym/_pysym.pyx')
+    ext = '.pyx' if USE_CYTHON else '.c'
+    ext_modules = [Extension(
+        'pysym._pysym',
+        ['pysym/_pysym'+ext]
+    )]
+    if USE_CYTHON:
+        from Cython.Build import cythonize
+        ext_modules = cythonize(ext_modules,
+                                # include_path=['./include'],
+                                gdb_debug=True)
+
 
 # http://conda.pydata.org/docs/build.html#environment-variables-set-during-the-build-process
 if os.environ.get('CONDA_BUILD', '0') == '1':
@@ -30,6 +49,7 @@ else:
     TAGGED_RELEASE = False
     # read __version__ attribute from _release.py:
     exec(open(release_py_path).read())
+
 
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -57,6 +77,7 @@ setup_kwargs = dict(
     url='https://github.com/bjodah/' + pkg_name,
     license='BSD',
     packages=[pkg_name] + tests,
+    ext_modules=ext_modules,
 )
 
 if __name__ == '__main__':
