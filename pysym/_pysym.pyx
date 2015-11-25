@@ -65,7 +65,6 @@ def _evalf(args):
 
 def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
     merged = merge(args, mrg_cls)
-    for x in merged:
     return collect(
         sorted(filter(
             lambda x: not x.found_in(drop),

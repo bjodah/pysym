@@ -2,6 +2,7 @@
 from __future__ import (absolute_import, division, print_function)
 
 import functools
+import math
 import operator
 
 from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt
@@ -92,6 +93,11 @@ def test_eq_evalb():
     assert (x == sin(x)) is False
 
 
+def test_diff0():
+    x = Symbol('x')
+    assert ((3*x).diff(x) == Number(3)) is True
+
+
 def test_diff1():
     x = Symbol('x')
     sinx = sin(x)
@@ -103,6 +109,7 @@ def test_diff1():
     f = x**0/(2 - 1*(0/x))
     dfdx = f.diff(x)
     assert dfdx.evalf() == 0
+
 
 def test_subs1():
     x, y = map(Symbol, 'x y'.split())
@@ -138,6 +145,15 @@ def test_diff3():
 def test_diff4():
     x, y = map(Symbol, 'x y'.split())
     assert ((3*x).diff(y) == Number(0)) is True
+
+
+def test_diff5():
+    x, y = map(Symbol, 'x y'.split())
+    assert ((x**3).diff(y) == Number(0)) is True
+    assert ((x**3).diff(x) == 3*x**2) is True
+    assert (((2*x+y)**3).diff(x) == 3*(2*x+y)**2*2) is True
+    assert abs((x**x).diff(x).subs({x: Number(3.14)}).evalf() -
+               (3.14**3.14 * math.log(3.14) + 3.14**3.14)) < 1e-13
 
 
 def test_repr():

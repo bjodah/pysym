@@ -72,9 +72,16 @@ class Lambdify(object):
             except AttributeError:
                 out.flat = _eval(exprs)
         elif isinstance(exprs, Matrix):
+            import numpy as np
             nr, nc = exprs.nrows, exprs.ncols
-            return Matrix(nr, nc, _eval(exprs._get_element(i) for
-                                        i in range(nr*nc)))
+            out = np.empty((nr, nc))
+            for ri in range(nr):
+                for ci in range(nc):
+                    out[ri, ci] = exprs._get_element(
+                        ri*nc + ci).subs(subsd).evalf()
+            return out
+            # return Matrix(nr, nc, _eval(exprs._get_element(i) for
+            #                             i in range(nr*nc)))
         elif hasattr(exprs, 'reshape'):
             # NumPy like container:
             container = exprs.__class__(exprs.shape, dtype=float, order='C')

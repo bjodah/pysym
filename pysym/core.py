@@ -34,7 +34,7 @@ class _deprecated(object):
 
 def collect(sorted_args, collect_to):
     nargs = len(sorted_args)
-    if nargs == 1:
+    if nargs <= 1:
         return sorted_args
     prev = sorted_args[0]
     count = 1
@@ -515,6 +515,8 @@ class Sub(Binary):
             return a
         if a == b:
             return Zero
+        if isinstance(a, Number) and isinstance(b, Number):
+            return Number.make(a.args[0] - b.args[0])
         return cls(*args)
 
     def diff(self, wrt):
@@ -564,11 +566,40 @@ class Pow(Binary):
 
     def diff(self, wrt):
         base, exponent = self.args
-        exponent *= log(base)
-        if exponent.has(wrt):
-            return Mul.create((exp(exponent), exponent.diff(wrt)))
+        in_base = base.has(wrt)
+        in_exponent = exponent.has(wrt)
+        if in_base:
+            if in_exponent:
+                pass
+            else:
+                return Mul.create((
+                    exponent, Pow.create((
+                        base, Sub.create((
+                            exponent, One
+                        ))
+                    )),
+                    base.diff(wrt)
+                ))
         else:
-            return Zero
+            if in_exponent:
+                pass
+            else:
+                return Zero
+
+        return exp.create((
+            Mul.create((
+                log.create((
+                    base,
+                )),
+                exponent
+            )),
+        )).diff(wrt)
+
+        # exponent *= log(base)
+        # if exponent.has(wrt):
+        #     return Mul.create((exp(exponent), exponent.diff(wrt)))
+        # else:
+        #     return Zero
 
     @classmethod
     def create(cls, args):
