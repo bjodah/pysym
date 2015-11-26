@@ -86,7 +86,7 @@ def merge_drop_sort_collect(args, collect_to, drop=(), mrg_cls=None):
     return collect(
         sorted(filter(
             lambda x: not x.found_in(drop),
-            merge(args, mrg_cls)
+            merge(sorted(args), mrg_cls)
         )), collect_to)
 
 
@@ -220,35 +220,12 @@ class Basic(object):
     def __sub__(self, other):
         return Sub.create((self, other))
 
+    @_wrap_numbers
     def __rsub__(self, other):
-        return self - other
+        return Sub.create((other, self))
 
     def __neg__(self):
         return -One * self
-
-    # @_wrap_numbers
-    # def __eq__(self, other):
-    #     return Eq(self, other)
-
-    # @_wrap_numbers
-    # def __ne__(self, other):
-    #     return Ne(self, other)
-
-    # @_wrap_numbers
-    # def __lt__(self, other):
-    #     return Lt(self, other)
-
-    # @_wrap_numbers
-    # def __le__(self, other):
-    #     return Le(self, other)
-
-    # @_wrap_numbers
-    # def __gt__(self, other):
-    #     return Gt(self, other)
-
-    # @_wrap_numbers
-    # def __ge__(self, other):
-    #     return Ge(self, other)
 
 
 class Relational(Basic):
@@ -334,6 +311,9 @@ class Number(Atomic):
 
     _NUMBER_TYPES = (int, float)
 
+    def __abs__(self):
+        return -self if self < 0 else self
+
     def __hash__(self):
         return hash(self.args[0])
 
@@ -378,6 +358,13 @@ class Symbol(Atomic):
 
     def __str__(self):
         return str(self.args[0])
+
+
+_GLOBAL_DUMMY_COUNTER=0
+
+def Dummy():
+    _GLOBAL_DUMMY_COUNTER += 1
+    return Symbol('Dummy' + str(_GLOBAL_DUMMY_COUNTER-1))
 
 
 Zero = Number(0)
@@ -441,7 +428,7 @@ class Add(Reduction):
             return Zero
         else:
             return super(Add, cls).create(
-                merge_drop_sort_collect(sorted(args), Mul,
+                merge_drop_sort_collect(args, Mul,
                                         (Zero, Mul(Zero)), Add))
 
     def diff(self, wrt):
@@ -520,7 +507,7 @@ class Sub(Binary):
         return cls(*args)
 
     def diff(self, wrt):
-        return Sub.create((self.args[0].diff(wrt), self.args[1].diff(wrt)))
+        return Sub.create((self.args[0].diff(wrt), -self.args[1].diff(wrt)))
 
 
 class Fraction(Binary):
@@ -606,6 +593,8 @@ class Pow(Binary):
         base, exponent = args
         if exponent.is_zero():
             return One
+        elif exponent == One:
+            return base
         if base.is_zero():
             return Zero
         return cls(*args)

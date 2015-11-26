@@ -53,6 +53,18 @@ def test_Add():
     assert abs(one_plus_two.evalf() - 3) < 1e-15
 
 
+def test_Sub():
+    x, y = map(Symbol, 'x y'.split())
+    xmy = x - y
+    ymx = y - x
+    subsd = {x: Number(3.0), y: Number(7.0)}
+    assert abs(xmy.subs(subsd).evalf() + 4) < 1e-16
+    assert abs(ymx.subs(subsd).evalf() - 4) < 1e-16
+    assert abs((xmy + ymx).subs(subsd).evalf()) < 1e-16
+
+    one_minus_x = 1 - x
+    assert abs(one_minus_x.subs({x: Number(0.5)}) - 0.5) < 1e-16
+
 def test_division():
     x, y = map(Symbol, 'x y'.split())
     zero_over_x_1 = 0/x
@@ -254,3 +266,8 @@ def test_subs_num():
     subsd = dict(zip(x+p, tuple(map(Number.make, [1]*28))))
     val = expr.subs(subsd).evalf()
     assert abs(val - ref) < 1e-14
+
+def test_Pow():
+    x = Symbol('x')
+    p = x**Number(1)
+    assert p is x
