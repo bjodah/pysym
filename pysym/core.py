@@ -360,12 +360,11 @@ class Symbol(Atomic):
         return str(self.args[0])
 
 
-_GLOBAL_DUMMY_COUNTER=0
-
 def Dummy():
-    _GLOBAL_DUMMY_COUNTER += 1
-    return Symbol('Dummy' + str(_GLOBAL_DUMMY_COUNTER-1))
+    Dummy.counter -= 1
+    return Symbol('Dummy' + str(Dummy.counter - 1))
 
+Dummy.counter = 1
 
 Zero = Number(0)
 One = Number(1)
@@ -507,7 +506,7 @@ class Sub(Binary):
         return cls(*args)
 
     def diff(self, wrt):
-        return Sub.create((self.args[0].diff(wrt), -self.args[1].diff(wrt)))
+        return Sub.create((self.args[0].diff(wrt), self.args[1].diff(wrt)))
 
 
 class Fraction(Binary):

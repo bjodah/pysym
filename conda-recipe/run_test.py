@@ -1,3 +1,3 @@
 import sys
 import pytest
-sys.exir(pytest.main(['--pyargs', 'pysym']))
+sys.exit(pytest.main(['--pyargs', 'pysym']))

@@ -5,7 +5,7 @@ import functools
 import math
 import operator
 
-from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt
+from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt, tan
 
 
 def test_has():
@@ -64,6 +64,7 @@ def test_Sub():
 
     one_minus_x = 1 - x
     assert abs(one_minus_x.subs({x: Number(0.5)}) - 0.5) < 1e-16
+
 
 def test_division():
     x, y = map(Symbol, 'x y'.split())
@@ -168,6 +169,14 @@ def test_diff5():
                (3.14**3.14 * math.log(3.14) + 3.14**3.14)) < 1e-13
 
 
+def test_diff6():
+    x, y = map(Symbol, 'x y'.split())
+    expr = x*y**2 - tan(2*x)
+    subsd = {x: Number(0.2), y: Number(0.3)}
+    ref_val = -2.26750821162195
+    assert abs(expr.diff(x).subs(subsd).evalf() - ref_val) < 1e-14
+
+
 def test_repr():
     x, y = map(Symbol, 'x y'.split())
     assert repr(x + y) == "Add(Symbol('x'), Symbol('y'))"
@@ -266,6 +275,7 @@ def test_subs_num():
     subsd = dict(zip(x+p, tuple(map(Number.make, [1]*28))))
     val = expr.subs(subsd).evalf()
     assert abs(val - ref) < 1e-14
+
 
 def test_Pow():
     x = Symbol('x')
