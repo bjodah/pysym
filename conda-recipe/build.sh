@@ -1,3 +1,2 @@
-#!/bin/bash
-${PYTHON} setup.py build
+#!/bin/sh
 ${PYTHON} setup.py install
