@@ -18,9 +18,14 @@ requirements:
 test:
     imports:
         - pysym
+
     requires:
         - pytest
+
+    commands:
+        - py.test --pyargs pysym
 
 about:
     home: https://github.com/bjodah/pysym
     license: BSD
+    summary: Minimal symbolic manipulation framework
