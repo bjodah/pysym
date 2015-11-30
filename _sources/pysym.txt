@@ -1,0 +1,28 @@
+pysym package
+=============
+
+.. automodule:: pysym
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+pysym.core module
+-----------------
+
+.. automodule:: pysym.core
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pysym.util module
+-----------------
+
+.. automodule:: pysym.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

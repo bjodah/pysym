@@ -1,0 +1,2016 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysym package &mdash; pysym 0.1.0.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysym 0.1.0.dev0 documentation" href="index.html"/>
+        <link rel="prev" title="Welcome to pysym’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pysym
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">pysym package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pysym.core">pysym.core module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pysym.util">pysym.util module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pysym</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>pysym package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pysym.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysym">
+<span id="pysym-package"></span><h1>pysym package<a class="headerlink" href="#module-pysym" title="Permalink to this headline">¶</a></h1>
+<p>pysym is a minimal symbolic manipulation framework</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pysym.core">
+<span id="pysym-core-module"></span><h2>pysym.core module<a class="headerlink" href="#module-pysym.core" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pysym.core.Abs">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Abs</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Add">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Add</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Reduction" title="pysym.core.Reduction"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Reduction</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Add.create" title="pysym.core.Add.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Add.diff" title="pysym.core.Add.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Add.evalf" title="pysym.core.Add.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Add.insert_mult" title="pysym.core.Add.insert_mult"><code class="xref py py-obj docutils literal"><span class="pre">insert_mult</span></code></a>(factor)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Add.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Add.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Add.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Add.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Add.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Add.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Add.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Add.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Add.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Add.insert_mult">
+<code class="descname">insert_mult</code><span class="sig-paren">(</span><em>factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Add.insert_mult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Add.insert_mult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Atomic">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Atomic</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Atomic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Atomic.expand" title="pysym.core.Atomic.expand"><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Atomic.found_in" title="pysym.core.Atomic.found_in"><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code></a>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Atomic.has" title="pysym.core.Atomic.has"><code class="xref py py-obj docutils literal"><span class="pre">has</span></code></a>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Atomic.is_atomic" title="pysym.core.Atomic.is_atomic"><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pysym.core.Atomic.args">
+<code class="descname">args</code><a class="headerlink" href="#pysym.core.Atomic.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Atomic.expand">
+<code class="descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Atomic.expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Atomic.expand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Atomic.found_in">
+<code class="descname">found_in</code><span class="sig-paren">(</span><em>flat_iterable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Atomic.found_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Atomic.found_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Atomic.has">
+<code class="descname">has</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Atomic.has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Atomic.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Atomic.is_atomic">
+<code class="descname">is_atomic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Atomic.is_atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Atomic.is_atomic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Basic">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Basic</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Basic.create" title="pysym.core.Basic.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Basic.expand" title="pysym.core.Basic.expand"><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Basic.found_in" title="pysym.core.Basic.found_in"><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code></a>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Basic.has" title="pysym.core.Basic.has"><code class="xref py py-obj docutils literal"><span class="pre">has</span></code></a>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Basic.is_atomic" title="pysym.core.Basic.is_atomic"><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Basic.is_zero" title="pysym.core.Basic.is_zero"><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Basic.subs" title="pysym.core.Basic.subs"><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code></a>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pysym.core.Basic.args">
+<code class="descname">args</code><a class="headerlink" href="#pysym.core.Basic.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pysym.core.Basic.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.expand">
+<code class="descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.expand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.found_in">
+<code class="descname">found_in</code><span class="sig-paren">(</span><em>flat_iterable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.found_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.found_in" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.has">
+<code class="descname">has</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.has"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.has" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.is_atomic">
+<code class="descname">is_atomic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.is_atomic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.is_atomic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.is_zero">
+<code class="descname">is_zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.is_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.is_zero" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Basic.subs">
+<code class="descname">subs</code><span class="sig-paren">(</span><em>subs_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Basic.subs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Basic.subs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Binary">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Binary</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Operator" title="pysym.core.Operator"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Operator</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysym.core.Dummy">
+<code class="descclassname">pysym.core.</code><code class="descname">Dummy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Dummy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Dummy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Eq">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Eq</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Eq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Fraction">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Fraction</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Fraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Binary" title="pysym.core.Binary"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Binary</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Fraction.create" title="pysym.core.Fraction.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Fraction.diff" title="pysym.core.Fraction.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Fraction.evalf" title="pysym.core.Fraction.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Fraction.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Fraction.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Fraction.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Fraction.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Fraction.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Fraction.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Fraction.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Fraction.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Fraction.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Function">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Function</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Function.evalf" title="pysym.core.Function.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Function.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Function.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Function.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Function1">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Function1</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Function1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Function1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function" title="pysym.core.Function"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Function1.diff" title="pysym.core.Function1.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Function1.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Function1.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Function1.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Ge">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Ge</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Ge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Gt">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Gt</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Gt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.ITE">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">ITE</code><span class="sig-paren">(</span><em>cond</em>, <em>if_true</em>, <em>if_false</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#ITE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.ITE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.ITE.evalf" title="pysym.core.ITE.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.ITE.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#ITE.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.ITE.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Le">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Le</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Le"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Le" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Lt">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Lt</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Lt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Matrix">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Matrix</code><span class="sig-paren">(</span><em>nrows</em>, <em>ncols</em>, <em>source</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Matrix.ncols" title="pysym.core.Matrix.ncols"><code class="xref py py-obj docutils literal"><span class="pre">ncols</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Matrix.nrows" title="pysym.core.Matrix.nrows"><code class="xref py py-obj docutils literal"><span class="pre">nrows</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Matrix.shape" title="pysym.core.Matrix.shape"><code class="xref py py-obj docutils literal"><span class="pre">shape</span></code></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Matrix.evalf" title="pysym.core.Matrix.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Matrix.flatten" title="pysym.core.Matrix.flatten"><code class="xref py py-obj docutils literal"><span class="pre">flatten</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Matrix.jacobian" title="pysym.core.Matrix.jacobian"><code class="xref py py-obj docutils literal"><span class="pre">jacobian</span></code></a>(iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Matrix.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Matrix.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Matrix.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Matrix.flatten">
+<code class="descname">flatten</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Matrix.flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Matrix.flatten" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Matrix.jacobian">
+<code class="descname">jacobian</code><span class="sig-paren">(</span><em>iterable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Matrix.jacobian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Matrix.jacobian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pysym.core.Matrix.ncols">
+<code class="descname">ncols</code><a class="headerlink" href="#pysym.core.Matrix.ncols" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pysym.core.Matrix.nrows">
+<code class="descname">nrows</code><a class="headerlink" href="#pysym.core.Matrix.nrows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pysym.core.Matrix.shape">
+<code class="descname">shape</code><a class="headerlink" href="#pysym.core.Matrix.shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Mul">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Mul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Reduction" title="pysym.core.Reduction"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Reduction</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Mul.create" title="pysym.core.Mul.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Mul.diff" title="pysym.core.Mul.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Mul.expand" title="pysym.core.Mul.expand"><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Mul.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Mul.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Mul.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Mul.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Mul.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Mul.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Mul.expand">
+<code class="descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Mul.expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Mul.expand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Ne">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Ne</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Ne"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Ne" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Not">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Not</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Not"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Relational" title="pysym.core.Relational"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Relational</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Number">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Number</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Atomic" title="pysym.core.Atomic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Atomic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Number.diff" title="pysym.core.Number.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Number.evalf" title="pysym.core.Number.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Number.is_zero" title="pysym.core.Number.is_zero"><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Number.make" title="pysym.core.Number.make"><code class="xref py py-obj docutils literal"><span class="pre">make</span></code></a>(arg)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Number.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Number.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Number.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Number.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Number.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Number.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Number.is_zero">
+<code class="descname">is_zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Number.is_zero"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Number.is_zero" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pysym.core.Number.make">
+<em class="property">classmethod </em><code class="descname">make</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Number.make"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Number.make" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Operator">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Operator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Operator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Operator.evalf" title="pysym.core.Operator.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Operator.sorted" title="pysym.core.Operator.sorted"><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Operator.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Operator.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Operator.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Operator.sorted">
+<code class="descname">sorted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Operator.sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Operator.sorted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Pow">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Pow</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Pow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Pow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Binary" title="pysym.core.Binary"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Binary</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Pow.create" title="pysym.core.Pow.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Pow.diff" title="pysym.core.Pow.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Pow.evalf" title="pysym.core.Pow.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Pow.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Pow.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Pow.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Pow.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Pow.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Pow.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Pow.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Pow.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Pow.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Reduction">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Reduction</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Reduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Reduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Operator" title="pysym.core.Operator"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Operator</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Reduction.create" title="pysym.core.Reduction.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Reduction.evalf" title="pysym.core.Reduction.evalf"><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Reduction.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Reduction.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Reduction.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Reduction.evalf">
+<code class="descname">evalf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Reduction.evalf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Reduction.evalf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Relational">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Relational</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Relational"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Relational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Relational.evalb" title="pysym.core.Relational.evalb"><code class="xref py py-obj docutils literal"><span class="pre">evalb</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Relational.evalb">
+<code class="descname">evalb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Relational.evalb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Relational.evalb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Sub">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Sub</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Sub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Binary" title="pysym.core.Binary"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Binary</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysym.core.Sub.create" title="pysym.core.Sub.create"><code class="xref py py-obj docutils literal"><span class="pre">create</span></code></a>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Sub.diff" title="pysym.core.Sub.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">sorted</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="pysym.core.Sub.create">
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Sub.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Sub.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysym.core.Sub.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Sub.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Sub.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Symbol">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Symbol</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Atomic" title="pysym.core.Atomic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Atomic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Symbol.diff" title="pysym.core.Symbol.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Symbol.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Symbol.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Symbol.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.Vector">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">Vector</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Basic" title="pysym.core.Basic"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Basic</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#pysym.core.Vector.diff" title="pysym.core.Vector.diff"><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code></a>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysym.core.Vector.diff">
+<code class="descname">diff</code><span class="sig-paren">(</span><em>wrt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#Vector.diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.Vector.diff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.acos">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">acos</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#acos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.acos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.asin">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">asin</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#asin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.asin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.atan">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">atan</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#atan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.atan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysym.core.collect">
+<code class="descclassname">pysym.core.</code><code class="descname">collect</code><span class="sig-paren">(</span><em>sorted_args</em>, <em>collect_to</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.collect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.cos">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">cos</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#cos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.cos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.exp">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">exp</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.gamma">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">gamma</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#gamma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.log">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">log</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysym.core.merge">
+<code class="descclassname">pysym.core.</code><code class="descname">merge</code><span class="sig-paren">(</span><em>args</em>, <em>mrg_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.merge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pysym.core.merge_drop_sort_collect">
+<code class="descclassname">pysym.core.</code><code class="descname">merge_drop_sort_collect</code><span class="sig-paren">(</span><em>args</em>, <em>collect_to</em>, <em>drop=()</em>, <em>mrg_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#merge_drop_sort_collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.merge_drop_sort_collect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.sin">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">sin</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#sin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.sin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.sqrt">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">sqrt</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#sqrt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.sqrt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysym.core.tan">
+<em class="property">class </em><code class="descclassname">pysym.core.</code><code class="descname">tan</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/core.html#tan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.core.tan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysym.core.Function1" title="pysym.core.Function1"><code class="xref py py-class docutils literal"><span class="pre">pysym.core.Function1</span></code></a></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">create</span></code>(args)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">diff</span></code>(wrt)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">evalf</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">expand</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">found_in</span></code>(flat_iterable)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">has</span></code>(instance)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">is_atomic</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">is_zero</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subs</span></code>(subs_dict)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pysym.util">
+<span id="pysym-util-module"></span><h2>pysym.util module<a class="headerlink" href="#module-pysym.util" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pysym.util.Lambdify">
+<em class="property">class </em><code class="descclassname">pysym.util.</code><code class="descname">Lambdify</code><span class="sig-paren">(</span><em>syms</em>, <em>exprs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/util.html#Lambdify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.util.Lambdify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Lambdify mimics symengine.Lambdify</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">__call__</span></code>(inp[,&nbsp;out])</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysym.util.lambdify">
+<code class="descclassname">pysym.util.</code><code class="descname">lambdify</code><span class="sig-paren">(</span><em>args</em>, <em>exprs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/util.html#lambdify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.util.lambdify" title="Permalink to this definition">¶</a></dt>
+<dd><p>lambdify mimics sympy.lambdify</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysym.util.symarray">
+<code class="descclassname">pysym.util.</code><code class="descname">symarray</code><span class="sig-paren">(</span><em>prefix</em>, <em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/util.html#symarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.util.symarray" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pysym.util.symbols">
+<code class="descclassname">pysym.util.</code><code class="descname">symbols</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysym/util.html#symbols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysym.util.symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>mimics sympy.symbols</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to pysym’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Bjoern I. Dahlgren &lt;bjodah@gmail.com&gt;.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

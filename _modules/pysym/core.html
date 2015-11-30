@@ -1,0 +1,1032 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysym.core &mdash; pysym 0.1.0.dev0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysym 0.1.0.dev0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysym
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pysym.html">pysym package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">pysym</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>pysym.core</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysym.core</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+
+
+<span class="k">def</span> <span class="nf">_wrap_numbers</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">new_args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">Number</span><span class="o">.</span><span class="n">make</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span>
+
+
+<span class="k">class</span> <span class="nc">_deprecated</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&#39;Deprecation warning: &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span>
+
+
+<div class="viewcode-block" id="collect"><a class="viewcode-back" href="../../pysym.html#pysym.core.collect">[docs]</a><span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="n">sorted_args</span><span class="p">,</span> <span class="n">collect_to</span><span class="p">):</span>
+    <span class="n">nargs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nargs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sorted_args</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="n">sorted_args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">new_args</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">collect_to</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Number</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+            <span class="p">))</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sorted_args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">is_last</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="p">(</span><span class="n">nargs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="n">prev</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">is_last</span><span class="p">:</span>
+                <span class="n">add</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_last</span><span class="p">:</span>
+                <span class="n">add</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">arg</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_args</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="merge"><a class="viewcode-back" href="../../pysym.html#pysym.core.merge">[docs]</a><span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">mrg_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mrg_cls</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">args</span>
+    <span class="n">new_args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">mrg_cls</span><span class="p">):</span>
+            <span class="n">new_args</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">merged</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">merged</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">merge</span><span class="p">(</span><span class="n">new_args</span><span class="p">,</span> <span class="n">mrg_cls</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">new_args</span>
+
+</div>
+<div class="viewcode-block" id="merge_drop_sort_collect"><a class="viewcode-back" href="../../pysym.html#pysym.core.merge_drop_sort_collect">[docs]</a><span class="k">def</span> <span class="nf">merge_drop_sort_collect</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">collect_to</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="p">(),</span> <span class="n">mrg_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">collect</span><span class="p">(</span>
+        <span class="nb">sorted</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">found_in</span><span class="p">(</span><span class="n">drop</span><span class="p">),</span>
+            <span class="n">merge</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">mrg_cls</span><span class="p">)</span>
+        <span class="p">)),</span> <span class="n">collect_to</span><span class="p">)</span>
+
+</div>
+<span class="nd">@functools.total_ordering</span>
+<div class="viewcode-block" id="Basic"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic">[docs]</a><span class="k">class</span> <span class="nc">Basic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;args&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="Basic.is_atomic"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.is_atomic">[docs]</a>    <span class="k">def</span> <span class="nf">is_atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Basic.is_zero"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.is_zero">[docs]</a>    <span class="k">def</span> <span class="nf">is_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Basic.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>  <span class="c"># extra magic allowed</span>
+</div>
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">Number</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">typ1</span><span class="p">,</span> <span class="n">typ2</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">typ1</span> <span class="ow">is</span> <span class="n">typ2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_atomic</span><span class="p">():</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">typ1</span><span class="o">.</span><span class="n">__name__</span> <span class="o">&lt;</span> <span class="n">typ2</span><span class="o">.</span><span class="n">__name__</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="n">Number</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="n">typ1</span><span class="p">,</span> <span class="n">typ2</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">typ1</span> <span class="ow">is</span> <span class="n">typ2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_atomic</span><span class="p">():</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">a1</span> <span class="o">==</span> <span class="n">a2</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">False</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_print_ccode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Basic.has"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.has">[docs]</a>    <span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Basic.found_in"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.found_in">[docs]</a>    <span class="k">def</span> <span class="nf">found_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat_iterable</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">elem_key</span> <span class="ow">in</span> <span class="n">flat_iterable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">elem_key</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="k">def</span> <span class="nf">_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symb</span><span class="p">,</span> <span class="n">repl</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">symb</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">symb</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Impossible, bug!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span>
+                    <span class="n">repl</span> <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="n">symb</span> <span class="k">else</span> <span class="n">arg</span><span class="o">.</span><span class="n">_subs</span><span class="p">(</span><span class="n">symb</span><span class="p">,</span> <span class="n">repl</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+                <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Basic.subs"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.subs">[docs]</a>    <span class="k">def</span> <span class="nf">subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subs_dict</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">subs_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">_subs</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+</div>
+<div class="viewcode-block" id="Basic.expand"><a class="viewcode-back" href="../../pysym.html#pysym.core.Basic.expand">[docs]</a>    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Add</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">+</span><span class="n">other</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">*</span><span class="n">other</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Pow</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">))</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">))</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="n">denom</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">))</span>
+
+    <span class="nd">@_deprecated</span><span class="p">(</span><span class="s">&#39;Use &quot;from __future__ import division&quot;&#39;</span><span class="p">)</span>
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">))</span>
+
+    <span class="nd">@_deprecated</span><span class="p">(</span><span class="s">&#39;Use &quot;from __future__ import division&quot;&#39;</span><span class="p">)</span>
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="n">denom</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">))</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Sub</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Sub</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">One</span> <span class="o">*</span> <span class="bp">self</span>
+
+</div>
+<div class="viewcode-block" id="Relational"><a class="viewcode-back" href="../../pysym.html#pysym.core.Relational">[docs]</a><span class="k">class</span> <span class="nc">Relational</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="Relational.evalb"><a class="viewcode-back" href="../../pysym.html#pysym.core.Relational.evalb">[docs]</a>    <span class="k">def</span> <span class="nf">evalb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rel_op</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rel_op_str</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+
+</div>
+<div class="viewcode-block" id="Eq"><a class="viewcode-back" href="../../pysym.html#pysym.core.Eq">[docs]</a><span class="k">class</span> <span class="nc">Eq</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__eq__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> == </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Ne"><a class="viewcode-back" href="../../pysym.html#pysym.core.Ne">[docs]</a><span class="k">class</span> <span class="nc">Ne</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__ne__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> != </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Lt"><a class="viewcode-back" href="../../pysym.html#pysym.core.Lt">[docs]</a><span class="k">class</span> <span class="nc">Lt</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__lt__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> &lt; </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Le"><a class="viewcode-back" href="../../pysym.html#pysym.core.Le">[docs]</a><span class="k">class</span> <span class="nc">Le</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__le__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> &lt;= </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Gt"><a class="viewcode-back" href="../../pysym.html#pysym.core.Gt">[docs]</a><span class="k">class</span> <span class="nc">Gt</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__gt__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> &gt; </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Ge"><a class="viewcode-back" href="../../pysym.html#pysym.core.Ge">[docs]</a><span class="k">class</span> <span class="nc">Ge</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__ge__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> &gt;= </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Not"><a class="viewcode-back" href="../../pysym.html#pysym.core.Not">[docs]</a><span class="k">class</span> <span class="nc">Not</span><span class="p">(</span><span class="n">Relational</span><span class="p">):</span>
+    <span class="n">_rel_op</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">__not__</span>
+    <span class="n">_rel_op_str</span> <span class="o">=</span> <span class="s">&#39;(not </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Atomic"><a class="viewcode-back" href="../../pysym.html#pysym.core.Atomic">[docs]</a><span class="k">class</span> <span class="nc">Atomic</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+
+    <span class="n">__all_instances</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakValueDictionary</span><span class="p">()</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;args&#39;</span><span class="p">,</span> <span class="s">&#39;__all_Atomic_instances&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="Atomic.is_atomic"><a class="viewcode-back" href="../../pysym.html#pysym.core.Atomic.is_atomic">[docs]</a>    <span class="k">def</span> <span class="nf">is_atomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">Atomic</span><span class="o">.</span><span class="n">__all_instances</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">arg</span><span class="p">,)</span>
+            <span class="n">Atomic</span><span class="o">.</span><span class="n">__all_instances</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">return</span> <span class="n">instance</span>
+
+<div class="viewcode-block" id="Atomic.has"><a class="viewcode-back" href="../../pysym.html#pysym.core.Atomic.has">[docs]</a>    <span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="Atomic.found_in"><a class="viewcode-back" href="../../pysym.html#pysym.core.Atomic.found_in">[docs]</a>    <span class="k">def</span> <span class="nf">found_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flat_iterable</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">flat_iterable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">elem</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="k">def</span> <span class="nf">_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symb</span><span class="p">,</span> <span class="n">repl</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">repl</span> <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">symb</span> <span class="k">else</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Atomic.expand"><a class="viewcode-back" href="../../pysym.html#pysym.core.Atomic.expand">[docs]</a>    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+</div></div>
+<div class="viewcode-block" id="Number"><a class="viewcode-back" href="../../pysym.html#pysym.core.Number">[docs]</a><span class="k">class</span> <span class="nc">Number</span><span class="p">(</span><span class="n">Atomic</span><span class="p">):</span>
+
+    <span class="n">_NUMBER_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span> <span class="k">if</span> <span class="bp">self</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Number.is_zero"><a class="viewcode-back" href="../../pysym.html#pysym.core.Number.is_zero">[docs]</a>    <span class="k">def</span> <span class="nf">is_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Number.make"><a class="viewcode-back" href="../../pysym.html#pysym.core.Number.make">[docs]</a>    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">_NUMBER_TYPES</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s">&#39;dtype&#39;</span><span class="p">):</span>  <span class="c"># NumPy object</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arg</span>
+</div>
+<div class="viewcode-block" id="Number.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Number.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Zero</span>
+</div>
+<div class="viewcode-block" id="Number.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Number.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NUMBER_TYPES</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">arg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Number</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_print_ccode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  <span class="c"># integer division</span>
+
+</div>
+<div class="viewcode-block" id="Symbol"><a class="viewcode-back" href="../../pysym.html#pysym.core.Symbol">[docs]</a><span class="k">class</span> <span class="nc">Symbol</span><span class="p">(</span><span class="n">Atomic</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Symbol.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Symbol.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">One</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Zero</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+</div>
+<div class="viewcode-block" id="Dummy"><a class="viewcode-back" href="../../pysym.html#pysym.core.Dummy">[docs]</a><span class="k">def</span> <span class="nf">Dummy</span><span class="p">():</span>
+    <span class="n">Dummy</span><span class="o">.</span><span class="n">counter</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="s">&#39;Dummy&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Dummy</span><span class="o">.</span><span class="n">counter</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+</div>
+<span class="n">Dummy</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">Zero</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">One</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Two</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">nan</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s">&#39;nan&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="Operator"><a class="viewcode-back" href="../../pysym.html#pysym.core.Operator">[docs]</a><span class="k">class</span> <span class="nc">Operator</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+    <span class="n">_operator</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_op_cstr</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># C-code</span>
+    <span class="n">_commutative</span> <span class="o">=</span> <span class="bp">True</span>
+
+<div class="viewcode-block" id="Operator.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Operator.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_operator</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op_str</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+
+    <span class="k">def</span> <span class="nf">_print_ccode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_op_cstr</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op_str</span><span class="p">)</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">arg</span><span class="o">.</span><span class="n">_print_ccode</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Operator.sorted"><a class="viewcode-back" href="../../pysym.html#pysym.core.Operator.sorted">[docs]</a>    <span class="k">def</span> <span class="nf">sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commutative</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+</div></div>
+<div class="viewcode-block" id="Reduction"><a class="viewcode-back" href="../../pysym.html#pysym.core.Reduction">[docs]</a><span class="k">class</span> <span class="nc">Reduction</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Reduction.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Reduction.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Reduction</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Reduction.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Reduction.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_operator</span><span class="p">,</span> <span class="p">(</span>
+            <span class="n">arg</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op_str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span> <span class="o">+</span> <span class="s">&#39;)&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_print_ccode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op_str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">arg</span><span class="o">.</span><span class="n">_print_ccode</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Add"><a class="viewcode-back" href="../../pysym.html#pysym.core.Add">[docs]</a><span class="k">class</span> <span class="nc">Add</span><span class="p">(</span><span class="n">Reduction</span><span class="p">):</span>
+
+    <span class="n">_operator</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">add</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="s">&#39; + &#39;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Add.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Add.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Zero</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Zero</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Add</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">merge_drop_sort_collect</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">Mul</span><span class="p">,</span>
+                                        <span class="p">(</span><span class="n">Zero</span><span class="p">,</span> <span class="n">Mul</span><span class="p">(</span><span class="n">Zero</span><span class="p">)),</span> <span class="n">Add</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Add.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Add.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Add.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Add.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Zero</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Add</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Add.insert_mult"><a class="viewcode-back" href="../../pysym.html#pysym.core.Add.insert_mult">[docs]</a>    <span class="k">def</span> <span class="nf">insert_mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">arg</span><span class="p">,</span> <span class="n">factor</span><span class="p">))</span>
+                                 <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+
+</div></div>
+<div class="viewcode-block" id="Mul"><a class="viewcode-back" href="../../pysym.html#pysym.core.Mul">[docs]</a><span class="k">class</span> <span class="nc">Mul</span><span class="p">(</span><span class="n">Reduction</span><span class="p">):</span>
+
+    <span class="n">_operator</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">mul</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="s">&#39;*&#39;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Mul.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Mul.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">One</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Zero</span><span class="o">.</span><span class="n">found_in</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Zero</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Mul</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                    <span class="n">merge_drop_sort_collect</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">Pow</span><span class="p">,</span> <span class="p">(</span><span class="n">One</span><span class="p">,),</span> <span class="n">Mul</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Mul.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Mul.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Add</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span>
+                <span class="n">arg</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">idx</span> <span class="k">else</span> <span class="n">arg</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))))</span>
+</div>
+<div class="viewcode-block" id="Mul.expand"><a class="viewcode-back" href="../../pysym.html#pysym.core.Mul.expand">[docs]</a>    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Add</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># use of `create` guarantees len(args) &gt; 1</span>
+                    <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">insert_mult</span><span class="p">(</span><span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># absorb into first Add</span>
+                    <span class="n">summation</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">insert_mult</span><span class="p">(</span><span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[:</span><span class="n">idx</span><span class="p">]))</span>
+                    <span class="k">return</span> <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">summation</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+</div></div>
+<div class="viewcode-block" id="Binary"><a class="viewcode-back" href="../../pysym.html#pysym.core.Binary">[docs]</a><span class="k">class</span> <span class="nc">Binary</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Binary</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Sub"><a class="viewcode-back" href="../../pysym.html#pysym.core.Sub">[docs]</a><span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">Binary</span><span class="p">):</span>
+    <span class="n">_operator</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">sub</span>
+    <span class="n">_commutative</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Sub.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Sub.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">args</span>  <span class="c"># a - b</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">b</span>
+        <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">a</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Zero</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">Number</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Number</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Sub.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Sub.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Sub</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)))</span>
+
+</div></div>
+<div class="viewcode-block" id="Fraction"><a class="viewcode-back" href="../../pysym.html#pysym.core.Fraction">[docs]</a><span class="k">class</span> <span class="nc">Fraction</span><span class="p">(</span><span class="n">Binary</span><span class="p">):</span>
+    <span class="n">_operator</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">truediv</span>
+    <span class="n">_commutative</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">)&#39;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Fraction.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Fraction.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">Zero</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">instance</span>
+</div>
+<div class="viewcode-block" id="Fraction.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Fraction.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Fraction.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Fraction.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>  <span class="c"># a/b</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+            <span class="n">Sub</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span><span class="o">*</span><span class="n">b</span><span class="p">,</span>
+                <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)))</span>
+            <span class="p">)),</span>
+            <span class="n">Pow</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">Two</span><span class="p">))</span>
+        <span class="p">))</span>
+        <span class="c"># return (self.args[0] * self.args[1]**-One).diff(wrt)</span>
+
+</div></div>
+<div class="viewcode-block" id="Pow"><a class="viewcode-back" href="../../pysym.html#pysym.core.Pow">[docs]</a><span class="k">class</span> <span class="nc">Pow</span><span class="p">(</span><span class="n">Binary</span><span class="p">):</span>
+
+    <span class="n">_operator</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">pow</span>
+    <span class="n">_commutative</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_op_str</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s">**</span><span class="si">%s</span><span class="s">)&#39;</span>  <span class="c"># factorial has higher precedence (hence parenthesis)</span>
+    <span class="n">_op_cstr</span> <span class="o">=</span> <span class="s">&#39;pow(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">)&#39;</span>
+
+<div class="viewcode-block" id="Pow.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Pow.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Pow.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Pow.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="n">base</span><span class="p">,</span> <span class="n">exponent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+        <span class="n">in_base</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span>
+        <span class="n">in_exponent</span> <span class="o">=</span> <span class="n">exponent</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">in_base</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">in_exponent</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                    <span class="n">exponent</span><span class="p">,</span> <span class="n">Pow</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                        <span class="n">base</span><span class="p">,</span> <span class="n">Sub</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                            <span class="n">exponent</span><span class="p">,</span> <span class="n">One</span>
+                        <span class="p">))</span>
+                    <span class="p">)),</span>
+                    <span class="n">base</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span>
+                <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">in_exponent</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Zero</span>
+
+        <span class="k">return</span> <span class="n">exp</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+            <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">create</span><span class="p">((</span>
+                    <span class="n">base</span><span class="p">,</span>
+                <span class="p">)),</span>
+                <span class="n">exponent</span>
+            <span class="p">)),</span>
+        <span class="p">))</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span>
+
+        <span class="c"># exponent *= log(base)</span>
+        <span class="c"># if exponent.has(wrt):</span>
+        <span class="c">#     return Mul.create((exp(exponent), exponent.diff(wrt)))</span>
+        <span class="c"># else:</span>
+        <span class="c">#     return Zero</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Pow.create"><a class="viewcode-back" href="../../pysym.html#pysym.core.Pow.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">base</span><span class="p">,</span> <span class="n">exponent</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="k">if</span> <span class="n">exponent</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">One</span>
+        <span class="k">elif</span> <span class="n">exponent</span> <span class="o">==</span> <span class="n">One</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">base</span>
+        <span class="k">if</span> <span class="n">base</span><span class="o">.</span><span class="n">is_zero</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">Zero</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="ITE"><a class="viewcode-back" href="../../pysym.html#pysym.core.ITE">[docs]</a><span class="k">class</span> <span class="nc">ITE</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">if_true</span><span class="p">,</span> <span class="n">if_false</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">if_true</span><span class="p">,</span> <span class="n">if_false</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">evalb</span><span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ITE.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.ITE.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval</span><span class="p">()</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;({1} if {0} else {2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_print_ccode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;((</span><span class="si">%s</span><span class="s">) ? </span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">_print_ccode</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../pysym.html#pysym.core.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="Function.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Function.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_func_str</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">))</span> <span class="o">+</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span> <span class="o">+</span> <span class="s">&#39;)&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Function1"><a class="viewcode-back" href="../../pysym.html#pysym.core.Function1">[docs]</a><span class="k">class</span> <span class="nc">Function1</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+
+    <span class="nd">@_wrap_numbers</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">arg</span><span class="p">,)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="Function1.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Function1.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Mul</span><span class="o">.</span><span class="n">create</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_deriv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)))</span>
+
+</div></div>
+<div class="viewcode-block" id="gamma"><a class="viewcode-back" href="../../pysym.html#pysym.core.gamma">[docs]</a><span class="k">class</span> <span class="nc">gamma</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">gamma</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;gamma&#39;</span>
+
+</div>
+<div class="viewcode-block" id="Abs"><a class="viewcode-back" href="../../pysym.html#pysym.core.Abs">[docs]</a><span class="k">class</span> <span class="nc">Abs</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="nb">abs</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;Abs&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ITE</span><span class="p">(</span><span class="n">Lt</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Zero</span><span class="p">),</span> <span class="o">-</span><span class="n">One</span><span class="p">,</span>
+                   <span class="n">ITE</span><span class="p">(</span><span class="n">Gt</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Zero</span><span class="p">),</span> <span class="n">One</span><span class="p">,</span> <span class="n">nan</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="exp"><a class="viewcode-back" href="../../pysym.html#pysym.core.exp">[docs]</a><span class="k">class</span> <span class="nc">exp</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;exp&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="sqrt"><a class="viewcode-back" href="../../pysym.html#pysym.core.sqrt">[docs]</a><span class="k">class</span> <span class="nc">sqrt</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;sqrt&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="log"><a class="viewcode-back" href="../../pysym.html#pysym.core.log">[docs]</a><span class="k">class</span> <span class="nc">log</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;log&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Pow</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">-</span><span class="n">One</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="sin"><a class="viewcode-back" href="../../pysym.html#pysym.core.sin">[docs]</a><span class="k">class</span> <span class="nc">sin</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;sin&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cos</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="cos"><a class="viewcode-back" href="../../pysym.html#pysym.core.cos">[docs]</a><span class="k">class</span> <span class="nc">cos</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;sin&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="tan"><a class="viewcode-back" href="../../pysym.html#pysym.core.tan">[docs]</a><span class="k">class</span> <span class="nc">tan</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;tan&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">One</span> <span class="o">+</span> <span class="n">tan</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">**</span><span class="n">Two</span>
+
+</div>
+<div class="viewcode-block" id="asin"><a class="viewcode-back" href="../../pysym.html#pysym.core.asin">[docs]</a><span class="k">class</span> <span class="nc">asin</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;asin&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">One</span><span class="o">/</span><span class="p">(</span><span class="n">One</span> <span class="o">-</span> <span class="n">arg</span><span class="o">**</span><span class="n">Two</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">One</span><span class="o">/</span><span class="n">Two</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="acos"><a class="viewcode-back" href="../../pysym.html#pysym.core.acos">[docs]</a><span class="k">class</span> <span class="nc">acos</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;acos&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">asin</span><span class="o">.</span><span class="n">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="atan"><a class="viewcode-back" href="../../pysym.html#pysym.core.atan">[docs]</a><span class="k">class</span> <span class="nc">atan</span><span class="p">(</span><span class="n">Function1</span><span class="p">):</span>
+    <span class="n">_function</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan</span>
+    <span class="n">_func_str</span> <span class="o">=</span> <span class="s">&#39;atan&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_deriv</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">One</span><span class="o">/</span><span class="p">(</span><span class="n">One</span> <span class="o">+</span> <span class="n">arg</span><span class="o">**</span><span class="n">Two</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../pysym.html#pysym.core.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Vector.diff"><a class="viewcode-back" href="../../pysym.html#pysym.core.Vector.diff">[docs]</a>    <span class="k">def</span> <span class="nf">diff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wrt</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="Matrix"><a class="viewcode-back" href="../../pysym.html#pysym.core.Matrix">[docs]</a><span class="k">class</span> <span class="nc">Matrix</span><span class="p">(</span><span class="n">Basic</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+            <span class="n">callback</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">source</span><span class="p">[</span><span class="n">ri</span><span class="o">*</span><span class="n">ncols</span> <span class="o">+</span> <span class="n">ci</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">callback</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">)</span> <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="n">nrows</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symb</span><span class="p">,</span> <span class="n">repl</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">_subs</span><span class="p">(</span><span class="n">symb</span><span class="p">,</span> <span class="n">repl</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ci</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">ri</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">ri</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nrows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ncols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Matrix.flatten"><a class="viewcode-back" href="../../pysym.html#pysym.core.Matrix.flatten">[docs]</a>    <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Vector</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">]</span> <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">))))</span>
+</div>
+    <span class="k">def</span> <span class="nf">_get_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="o">+</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_element</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="o">*</span><span class="n">ri</span> <span class="o">+</span> <span class="n">ci</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Matrix.jacobian"><a class="viewcode-back" href="../../pysym.html#pysym.core.Matrix.jacobian">[docs]</a>    <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">iterable</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">iterable</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;need column or row vector&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">iterable</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">iterable</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">iterable</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">iterable</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">nrows</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;jacobian only defined for row or column matrices&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterable</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_element</span><span class="p">(</span><span class="n">ri</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">iterable</span><span class="p">[</span><span class="n">ci</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nrows</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span>
+                <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterable</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_element</span><span class="p">(</span><span class="n">ri</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">iterable</span><span class="p">[</span><span class="n">ci</span><span class="p">]))</span>
+</div>
+<div class="viewcode-block" id="Matrix.evalf"><a class="viewcode-back" href="../../pysym.html#pysym.core.Matrix.evalf">[docs]</a>    <span class="k">def</span> <span class="nf">evalf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="bp">self</span><span class="p">[</span><span class="n">ri</span><span class="p">,</span> <span class="n">ci</span><span class="p">]</span><span class="o">.</span><span class="n">evalf</span><span class="p">()</span> <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">)]</span>
+                <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">)]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Bjoern I. Dahlgren &lt;bjodah@gmail.com&gt;.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
