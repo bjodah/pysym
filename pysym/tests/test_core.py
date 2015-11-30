@@ -5,7 +5,10 @@ import functools
 import math
 import operator
 
-from .. import Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt, tan
+from .. import (
+    Symbol, Add, gamma, Number, sin, cos, Mul, ITE, exp, Lt, tan, log,
+    Abs
+)
 
 
 def test_has():
@@ -175,6 +178,30 @@ def test_diff6():
     subsd = {x: Number(0.2), y: Number(0.3)}
     ref_val = -2.26750821162195
     assert abs(expr.diff(x).subs(subsd).evalf() - ref_val) < 1e-14
+
+
+def test_diff7():
+    x = Symbol('x')
+    expr = 2*exp(x*x)*x
+    subsd = {x: Number(0.2)}
+    ref_val = 2.2481512722555586
+    assert abs(expr.diff(x).subs(subsd).evalf() - ref_val) < 1e-15
+
+
+def test_diff8():
+    x = Symbol('x')
+    e = log(sin(x))
+    subsd = {x: Number(0.2)}
+    ref_val = 4.93315487558689
+    assert abs(e.diff(x).subs(subsd).evalf() - ref_val) < 4e-15
+
+
+def test_diff9():
+    x = Symbol('x')
+    absx = Abs(x)
+    assert abs(absx.diff(x).subs({x: Number(-.1)}).evalf() + 1) < 1e-16
+    assert abs(absx.diff(x).subs({x: Number(.1)}).evalf() - 1) < 1e-16
+    assert math.isnan(absx.diff(x).subs({x: Number(0)}).evalf())
 
 
 def test_repr():

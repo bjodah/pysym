@@ -9,8 +9,6 @@ import operator
 import warnings
 import weakref
 
-# from fastcache import clru_cache
-
 
 def _wrap_numbers(func):
     @functools.wraps(func)
@@ -105,7 +103,6 @@ class Basic(object):
         self.args = args
 
     @classmethod
-    # @clru_cache(maxsize=1024*1024, typed=True)
     def create(cls, args):
         return cls(*args)  # extra magic allowed
 
@@ -369,6 +366,7 @@ Dummy.counter = 1
 Zero = Number(0)
 One = Number(1)
 Two = Number(2)
+nan = Number(float('nan'))
 
 
 class Operator(Basic):
@@ -650,13 +648,14 @@ class gamma(Function1):
     _func_str = 'gamma'
 
 
-class abs(Function1):
+class Abs(Function1):
     _function = abs
-    _func_str = 'abs'
+    _func_str = 'Abs'
 
     @staticmethod
     def _deriv(arg):
-        return One
+        return ITE(Lt(arg, Zero), -One,
+                   ITE(Gt(arg, Zero), One, nan))
 
 
 class exp(Function1):
