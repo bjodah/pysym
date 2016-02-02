@@ -202,3 +202,13 @@ def test_itertools_chain():
     inp = itertools.chain([inp[0]], (inp[1],), [inp[2]])
     A = l(inp)
     check(A)
+
+
+def test_Lambdify_matrix():
+    import numpy as np
+    x, y = arr = se.symarray('x', 2)
+    mat = se.Matrix(2, 2, [x, 1+y, 2*y*x**2, 3])
+    lmb = se.Lambdify(arr, mat)
+    result = lmb([3, 5])
+    assert result.shape == (2, 2)
+    assert np.allclose(result, [[3, 6], [90, 3]])
