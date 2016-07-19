@@ -7,6 +7,9 @@ pysym
 .. image:: https://img.shields.io/pypi/v/pysym.svg
    :target: https://pypi.python.org/pypi/pysym
    :alt: PyPI version
+.. image:: https://img.shields.io/badge/python-2.7,3.4,3.5-blue.svg
+   :target: https://www.python.org/
+   :alt: Python version
 .. image:: https://img.shields.io/pypi/l/pysym.svg
    :target: https://github.com/bjodah/pysym/blob/master/LICENSE
    :alt: License
@@ -17,7 +20,7 @@ pysym
    :target: http://hera.physchem.kth.se/~pysym/branches/master/htmlcov
    :alt: coverage
 
-`pysym <https://github.com/bjodah/pysym>`_ is an experimental
+`pysym <https://github.com/bjodah/pysym>`_ is an *experimental*
 Python package for symbolic manipulation with limited scope (as in minimal).
 It tries to stay compatible with the API of `SymPy <http://www.sympy.org>`_.
 It should be viewed as a prototype and not as a "production" package.
