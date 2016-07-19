@@ -1,31 +1,31 @@
 package:
-    name: pysym
-    version: 0.3.0.git
+  name: pysym
+  version: 0.3.0.git
 
 source:
-    path: ../
+  path: ../
 
 build:
-    number: 0
+  number: 0
 
 requirements:
-    build:
-        - python
-        - cython
-    run:
-        - python
+  build:
+    - python
+    - cython
+  run:
+    - python
 
 test:
-    imports:
-        - pysym
+  imports:
+    - pysym
 
-    requires:
-        - pytest
+  requires:
+    - pytest
 
-    commands:
-        - py.test --pyargs pysym
+  # commands:
+  #   - py.test --pyargs pysym
 
 about:
-    home: https://github.com/bjodah/pysym
-    license: BSD
-    summary: Minimal symbolic manipulation framework
+  home: https://github.com/bjodah/pysym
+  license: BSD
+  summary: Minimal symbolic manipulation framework
