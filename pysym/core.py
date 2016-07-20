@@ -766,7 +766,7 @@ class Matrix(Basic):
             def callback(ri, ci):
                 try:
                     return Number.make(source[ri, ci])
-                except TypeError:
+                except (TypeError, IndexError):
                     return Number.make(source[ri*ncols + ci])
         self.args = (nrows, ncols) + tuple(
             callback(ri, ci) for ri, ci in itertools.product(
