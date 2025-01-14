@@ -9,15 +9,6 @@ from setuptools import setup
 pkg_name = 'pysym'
 
 PYSYM_RELEASE_VERSION = os.environ.get('PYSYM_RELEASE_VERSION', '')  # v*
-
-# http://conda.pydata.org/docs/build.html#environment-variables-set-during-the-build-process
-if os.environ.get('CONDA_BUILD', '0') == '1':
-    try:
-        PYSYM_RELEASE_VERSION = 'v' + open(
-            '__conda_version__.txt', 'rt').readline().rstrip()
-    except IOError:
-        pass
-
 release_py_path = os.path.join(pkg_name, '_release.py')
 
 if len(PYSYM_RELEASE_VERSION) > 0:
